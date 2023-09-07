@@ -66,11 +66,12 @@ class SearchViewController: BaseViewController {
         view.backgroundColor = .blue
         
         
-        /* === 네비게이션 아이템 커스텀 === */
+        /* === 네비게이션 아이템 및 서치바 커스텀 === */
         navigationItem.searchController = searchController
         searchController.hidesNavigationBarDuringPresentation = false   // 네비게이션 타이틀 계속 띄워주기
         navigationItem.hidesSearchBarWhenScrolling = false              // 스크롤 시에도 서치바 유지
         title = "검색 창"
+        searchController.searchBar.delegate = self
         
         
         
@@ -88,11 +89,16 @@ class SearchViewController: BaseViewController {
     
     /* ===== 서버 통신 함수 ===== */
     func callShopingList(_ query: String) {
-        ShoppingAPIManager.shared.callShoppingList(query) { value in
-            print(value)
-            
-            self.data = value.items
-            self.collectionView.reloadData()
+        
+        if (query == "") {
+            // 빈 문자열 입력했을 때 예외처리
+        }else {
+            ShoppingAPIManager.shared.callShoppingList(query) { value in
+                print(value)
+                
+                self.data = value.items
+                self.collectionView.reloadData()
+            }
         }
     }
     
@@ -189,5 +195,18 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         cell.checkHeartButton(false)    // 좋아요 여부
         
         return cell;
+    }
+}
+
+
+/* ========== collectionView extension ========== */
+extension SearchViewController: UISearchBarDelegate {
+    // 실시간x
+    // 검색 버튼 눌렀을 때 화면 업데이트
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let query = searchBar.text else { return }
+        
+        callShopingList(query)
     }
 }
