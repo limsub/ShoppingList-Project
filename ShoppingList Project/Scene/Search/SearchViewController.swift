@@ -50,7 +50,7 @@ class SearchViewController: BaseViewController {
     lazy var collectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
         
-        view.backgroundColor = .blue
+        view.backgroundColor = .black
         
         view.register(ShoppingCollectionViewCell.self, forCellWithReuseIdentifier: ShoppingCollectionViewCell.reuseIdentifier)
         
@@ -66,7 +66,7 @@ class SearchViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .blue
+        view.backgroundColor = .black
         
         
         /* === 네비게이션 아이템 및 서치바 커스텀 === */
@@ -75,6 +75,57 @@ class SearchViewController: BaseViewController {
         navigationItem.hidesSearchBarWhenScrolling = false              // 스크롤 시에도 서치바 유지
         title = "검색 창"
         searchController.searchBar.delegate = self
+//        navigationItem.searchController?.searchBar.backgroundColor = .black
+//        navigationItem.searchController?.searchBar.barTintColor = .lightGray
+        navigationItem.searchController?.searchBar.searchTextField.backgroundColor = .darkGray
+//        navigationItem.titleView?.backgroundColor = .black
+        navigationController?.navigationBar.backgroundColor = .black
+//        navigationController?.navigationBar.tintColor = .white
+        
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        
+//        searchController.automaticallyShowsCancelButton
+        
+//        searchController.searchBar.placeholder = "검색어를 입력하세요."
+        searchController.searchBar.tintColor = .white
+        searchController.searchBar.setValue("취소", forKey: "cancelButtonText")
+        
+        searchController.searchBar.searchTextField.textColor = .white
+        searchController.searchBar.searchTextField.attributedPlaceholder = NSAttributedString(string: "검색어를 입력하세요.", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
+        
+//        let image = UIImage(systemName: "magnifyingglass")?.withTintColor(.white, renderingMode: .alwaysTemplate)
+//        searchController.searchBar.setImage(image, for: UISearchBar.Icon.search, state: .normal)
+        
+//
+//
+//
+//        //왼쪽 서치아이콘 이미지 세팅하기
+//        searchController.searchBar.setImage(UIImage(named: "icSearchNonW"), for: UISearchBar.Icon.search, state: .normal)
+//                //오른쪽 x버튼 이미지 세팅하기
+//        searchController.searchBar.setImage(UIImage(named: "icCancel"), for: .clear, state: .normal)
+//
+//        if let textfield = searchController.searchBar.value(forKey: "searchField") as? UITextField {
+////                    //서치바 백그라운드 컬러
+////                    textfield.backgroundColor = UIColor.black
+////                    //플레이스홀더 글씨 색 정하기
+////                    textfield.attributedPlaceholder = NSAttributedString(string: textfield.placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
+////                    //서치바 텍스트입력시 색 정하기
+////                    textfield.textColor = UIColor.white
+//                    //왼쪽 아이콘 이미지넣기
+//                    if let leftView = textfield.leftView as? UIImageView {
+//                        leftView.image = leftView.image?.withRenderingMode(.alwaysTemplate)
+//                        //이미지 틴트컬러 정하기
+//                        leftView.tintColor = UIColor.white
+//                    }
+//                    //오른쪽 x버튼 이미지넣기
+//                    if let rightView = textfield.rightView as? UIImageView {
+//                        rightView.image = rightView.image?.withRenderingMode(.alwaysTemplate)
+//                        //이미지 틴트 정하기
+//                        rightView.tintColor = UIColor.white
+//                    }
+//
+//                }
+        
         
         
         
