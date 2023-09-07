@@ -26,6 +26,8 @@
 		489CAB1B2AA9AFAF001A4408 /* BaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAB1A2AA9AFAF001A4408 /* BaseCollectionViewCell.swift */; };
 		489CAB1E2AA9B003001A4408 /* ShoppingCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAB1D2AA9B003001A4408 /* ShoppingCollectionViewCell.swift */; };
 		489CAB202AA9B680001A4408 /* ReusableProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAB1F2AA9B680001A4408 /* ReusableProtocol.swift */; };
+		489CAB242AA9C1DE001A4408 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 489CAB232AA9C1DE001A4408 /* .gitignore */; };
+		489CAB292AA9C322001A4408 /* About.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAB282AA9C322001A4408 /* About.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,6 +47,8 @@
 		489CAB1A2AA9AFAF001A4408 /* BaseCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewCell.swift; sourceTree = "<group>"; };
 		489CAB1D2AA9B003001A4408 /* ShoppingCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingCollectionViewCell.swift; sourceTree = "<group>"; };
 		489CAB1F2AA9B680001A4408 /* ReusableProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableProtocol.swift; sourceTree = "<group>"; };
+		489CAB232AA9C1DE001A4408 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		489CAB282AA9C322001A4408 /* About.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +86,7 @@
 		489CAAE62AA9A6F3001A4408 /* ShoppingList Project */ = {
 			isa = PBXGroup;
 			children = (
+				489CAB252AA9C1E6001A4408 /* Network */,
 				489CAB192AA9AF9B001A4408 /* Cell */,
 				489CAB082AA9A945001A4408 /* Base */,
 				489CAAFE2AA9A902001A4408 /* Scene */,
@@ -93,6 +98,7 @@
 				489CAAF02AA9A6F6001A4408 /* Assets.xcassets */,
 				489CAAF22AA9A6F6001A4408 /* LaunchScreen.storyboard */,
 				489CAAF52AA9A6F6001A4408 /* Info.plist */,
+				489CAB232AA9C1DE001A4408 /* .gitignore */,
 			);
 			path = "ShoppingList Project";
 			sourceTree = "<group>";
@@ -155,6 +161,14 @@
 				489CAB1D2AA9B003001A4408 /* ShoppingCollectionViewCell.swift */,
 			);
 			path = Cell;
+			sourceTree = "<group>";
+		};
+		489CAB252AA9C1E6001A4408 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				489CAB282AA9C322001A4408 /* About.swift */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -228,6 +242,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				489CAB242AA9C1DE001A4408 /* .gitignore in Resources */,
 				489CAAF42AA9A6F6001A4408 /* LaunchScreen.storyboard in Resources */,
 				489CAAF12AA9A6F6001A4408 /* Assets.xcassets in Resources */,
 				489CAAEF2AA9A6F3001A4408 /* Main.storyboard in Resources */,
@@ -245,6 +260,7 @@
 				489CAAEC2AA9A6F3001A4408 /* ViewController.swift in Sources */,
 				489CAB1B2AA9AFAF001A4408 /* BaseCollectionViewCell.swift in Sources */,
 				489CAAE82AA9A6F3001A4408 /* AppDelegate.swift in Sources */,
+				489CAB292AA9C322001A4408 /* About.swift in Sources */,
 				489CAAFD2AA9A7DE001A4408 /* TabBarViewController.swift in Sources */,
 				489CAAEA2AA9A6F3001A4408 /* SceneDelegate.swift in Sources */,
 				489CAB202AA9B680001A4408 /* ReusableProtocol.swift in Sources */,
