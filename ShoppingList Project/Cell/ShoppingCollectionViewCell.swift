@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class ShoppingCollectionViewCell: BaseCollectionViewCell {
     
@@ -58,11 +59,40 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
         let button = UIButton()
         
         button.backgroundColor = .white
+        button.setImage(UIImage(systemName: "heart"), for: .normal)
         
         return button
     }()
     
+    /* ========== 셀 디자인 함수 ========== */
+    // 초기 디자인
+    func initialDesignCell(_ sender: Item) {
+        
+        let url = URL(string: sender.image)
+        posterImageView.kf.setImage(with: url)
+        
+        mallNameLabel.text = sender.mallName
+        titleLabel.text = sender.title
+        priceLabel.text = sender.lprice // 3개 단위로 쉼표 찍어주기 -> 함수 만들기
+        heartButton.setImage(UIImage(systemName: "heart"), for: .normal)
+    }
     
+    // 좋아요 버튼 체크 (or 토글)
+    // true -> fill / false -> NOT fill
+    func checkHeartButton(_ sender: Bool) {
+        heartButton.setImage(
+            UIImage(systemName: (sender) ? "heart.fill" : "heart"),
+            for: .normal
+        )
+    }
+    
+    // 가격 쉼표 찍어주는 함수 (세자리마다)
+    func makeComma(_ sender: String) -> String {
+    
+        return ""
+    }
+    
+    /* ========== set Configure / Constraints ========== */
     override func setConfigure() {
         super.setConfigure()
         

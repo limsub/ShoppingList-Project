@@ -22,11 +22,11 @@ struct Item: Codable {
     let image: String
     let lprice, hprice, mallName, productID: String
     let productType: String
-    let brand, maker: Brand
-    let category1: Category1
-    let category2: Category2
-    let category3: Category3
-    let category4: Category4
+    let brand, maker: String
+    let category1: String
+    let category2: String
+    let category3: String
+    let category4: String
 
     enum CodingKeys: String, CodingKey {
         case title, link, image, lprice, hprice, mallName

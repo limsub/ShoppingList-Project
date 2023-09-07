@@ -21,6 +21,9 @@ import UIKit
 
 class SearchViewController: BaseViewController {
     
+    /* ========== 컬렉션뷰 데이터 ========== */
+    var data: [Item] = []
+    
     /* ========== 인스턴스 생성 ========== */
     let searchController = UISearchController(searchResultsController: nil)
     
@@ -55,6 +58,8 @@ class SearchViewController: BaseViewController {
         return view
     }()
     
+    
+    /* ========== viewDidLoad ========== */
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -67,11 +72,28 @@ class SearchViewController: BaseViewController {
         navigationItem.hidesSearchBarWhenScrolling = false              // 스크롤 시에도 서치바 유지
         title = "검색 창"
         
+        
+        
         /* === 정렬 버튼 addTarget === */
         accuracySortButton.addTarget(self, action: #selector(accuracySortButtonClicked), for: .touchUpInside)
         dateSortButton.addTarget(self, action: #selector(dateSortButtonClicked), for: .touchUpInside)
         highPriceSortButton.addTarget(self, action: #selector(highPriceSortButtonClicked), for: .touchUpInside)
         lowPriceSortButton.addTarget(self, action: #selector(lowPriceSortButtonClicked), for: .touchUpInside)
+        
+        
+        
+        /* === 서버 통신 테스트 === */
+        callShopingList("apple")
+    }
+    
+    /* ===== 서버 통신 함수 ===== */
+    func callShopingList(_ query: String) {
+        ShoppingAPIManager.shared.callShoppingList(query) { value in
+            print(value)
+            
+            self.data = value.items
+            self.collectionView.reloadData()
+        }
     }
     
     
@@ -155,12 +177,16 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
 
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return data.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShoppingCollectionViewCell.reuseIdentifier, for: indexPath) as? ShoppingCollectionViewCell else { return UICollectionViewCell() }
+
+        
+        cell.initialDesignCell(data[indexPath.row])
+        cell.checkHeartButton(false)    // 좋아요 여부
         
         return cell;
     }
