@@ -40,7 +40,7 @@ class SearchViewController: BaseViewController {
     let accuracySortButton = makeSortButton("정확도")
     let dateSortButton = makeSortButton("날짜순")
     let highPriceSortButton = makeSortButton("가격높은순")
-    let lowPriceSortbutton = makeSortButton("가격낮은순")
+    let lowPriceSortButton = makeSortButton("가격낮은순")
     
     lazy var collectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
@@ -66,13 +66,41 @@ class SearchViewController: BaseViewController {
         searchController.hidesNavigationBarDuringPresentation = false   // 네비게이션 타이틀 계속 띄워주기
         navigationItem.hidesSearchBarWhenScrolling = false              // 스크롤 시에도 서치바 유지
         title = "검색 창"
+        
+        /* === 정렬 버튼 addTarget === */
+        accuracySortButton.addTarget(self, action: #selector(accuracySortButtonClicked), for: .touchUpInside)
+        dateSortButton.addTarget(self, action: #selector(dateSortButtonClicked), for: .touchUpInside)
+        highPriceSortButton.addTarget(self, action: #selector(highPriceSortButtonClicked), for: .touchUpInside)
+        lowPriceSortButton.addTarget(self, action: #selector(lowPriceSortButtonClicked), for: .touchUpInside)
     }
     
+    
+    
+    /* ===== 버튼 addTarget 액션 ===== */
+    @objc
+    func accuracySortButtonClicked() {
+        collectionView.setContentOffset(.zero, animated: true)
+    }
+    @objc
+    func dateSortButtonClicked() {
+        collectionView.setContentOffset(.zero, animated: true)
+    }
+    @objc
+    func highPriceSortButtonClicked() {
+        collectionView.setContentOffset(.zero, animated: true)
+    }
+    @objc
+    func lowPriceSortButtonClicked() {
+        collectionView.setContentOffset(.zero, animated: true)
+    }
+    
+    
+    /* ===== set Configure / Constraints ===== */
     override func setConfigure() {
         super.setConfigure()
         
         
-        [accuracySortButton, dateSortButton, highPriceSortButton, lowPriceSortbutton].forEach{ item in
+        [accuracySortButton, dateSortButton, highPriceSortButton, lowPriceSortButton].forEach{ item in
             view.addSubview(item)
         }
         view.addSubview(collectionView)
@@ -93,7 +121,7 @@ class SearchViewController: BaseViewController {
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
             make.leading.equalTo(dateSortButton.snp.trailing).offset(5)
         }
-        lowPriceSortbutton.snp.makeConstraints { make in
+        lowPriceSortButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide).offset(10)
             make.leading.equalTo(highPriceSortButton.snp.trailing).offset(5)
         }
@@ -105,6 +133,8 @@ class SearchViewController: BaseViewController {
     }
 }
 
+
+/* ========== collectionView extension ========== */
 extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     
