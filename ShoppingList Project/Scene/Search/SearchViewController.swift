@@ -23,27 +23,29 @@ class SearchViewController: BaseViewController {
     
     /* ========== 컬렉션뷰 데이터 ========== */
     var data: [Item] = []
+    var startNum: Int = 1   // pagination (1 -> 31 -> 61 -> 91 -> done)
+    var totalNum: Int = 0   // pagination 시 예외처리용 (totalNum < indexPath.row -> 페이지 추가 x. 애초에 넘어가지도 않겠네)
+    var howSort = SortCase.accuracy    // 정렬 기준. 디폴트 : 정확도
     
     /* ========== 인스턴스 생성 ========== */
     let searchController = UISearchController(searchResultsController: nil)
     
-    static func makeSortButton(_ name: String) -> UIButton {
+    static func makeSortButton(_ type: SortCase) -> UIButton {
         let button = UIButton()
         
         button.layer.cornerRadius = 10
         button.layer.borderColor = UIColor.white.cgColor
         button.layer.borderWidth = 1
         
-        // iOS 13에서 되냐 이거
-        button.setTitle(name, for: .normal)
+        button.setTitle(type.title, for: .normal)
         
         return button
     }
     
-    let accuracySortButton = makeSortButton("정확도")
-    let dateSortButton = makeSortButton("날짜순")
-    let highPriceSortButton = makeSortButton("가격높은순")
-    let lowPriceSortButton = makeSortButton("가격낮은순")
+    let accuracySortButton = makeSortButton(SortCase.accuracy)
+    let dateSortButton = makeSortButton(SortCase.date)
+    let highPriceSortButton = makeSortButton(SortCase.highPrice)
+    let lowPriceSortButton = makeSortButton(SortCase.lowPrice)
     
     lazy var collectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
@@ -54,6 +56,7 @@ class SearchViewController: BaseViewController {
         
         view.dataSource = self
         view.delegate = self
+        view.prefetchDataSource = self
         
         return view
     }()
@@ -83,23 +86,52 @@ class SearchViewController: BaseViewController {
         
         
         
-        /* === 서버 통신 테스트 === */
-        callShopingList("apple")
+        /* === 초기 서버 통신 === */
+//        callShopingList("samsung", howSort, startNum)   // startNum == 1
     }
     
     /* ===== 서버 통신 함수 ===== */
-    func callShopingList(_ query: String) {
+    func callShopingList(_ query: String, _ sortType: SortCase, _ start: Int) {
+        
+        // pagination일 때는 기존 배열에 append
+        // 새로 검색했거나 정렬 방식 바꿨을 때는 배열 초기화 후 append
+        // -> 배열 초기화는 함수 실행시키기 전에 해주는 걸로 한다
         
         if (query == "") {
             // 빈 문자열 입력했을 때 예외처리
         }else {
-            ShoppingAPIManager.shared.callShoppingList(query) { value in
+            ShoppingAPIManager.shared.callShoppingList(query, sortType, start) { value in
                 print(value)
                 
-                self.data = value.items
+                // 새로운 검색을 하는 상황이면 스크롤을 맨 위로 올려준다
+                // "새로운 검색을 하는 상황" : startNum == 1
+                if (self.startNum == 1) {
+                    self.collectionView.setContentOffset(.zero, animated: true)
+                    self.data.removeAll()
+                }
+                
+                self.totalNum = value.total
+                self.data.append(contentsOf: value.items)
+                
                 self.collectionView.reloadData()
+                
+                
             }
         }
+    }
+    
+    /* ===== 데이터 초기화 함수= ===== */
+    func initData() {
+        startNum = 1
+    }
+    
+    
+    /* ===== 현재 서치바의 텍스트 기반으로 새롭게 검색 후 테이블 업데이트까지 =====*/
+    func searchNewData() {
+        initData()
+        
+        guard let query = searchController.searchBar.text else { return }
+        callShopingList(query, howSort, startNum)
     }
     
     
@@ -107,19 +139,43 @@ class SearchViewController: BaseViewController {
     /* ===== 버튼 addTarget 액션 ===== */
     @objc
     func accuracySortButtonClicked() {
-        collectionView.setContentOffset(.zero, animated: true)
+        howSort = .accuracy
+        searchNewData()
+        changeSortButtonDesign()
     }
     @objc
     func dateSortButtonClicked() {
-        collectionView.setContentOffset(.zero, animated: true)
+        howSort = .date
+        searchNewData()
+        changeSortButtonDesign()
     }
     @objc
     func highPriceSortButtonClicked() {
-        collectionView.setContentOffset(.zero, animated: true)
+        howSort = .highPrice
+        searchNewData()
+        changeSortButtonDesign()
     }
     @objc
     func lowPriceSortButtonClicked() {
-        collectionView.setContentOffset(.zero, animated: true)
+        howSort = .lowPrice
+        searchNewData()
+        changeSortButtonDesign()
+    }
+    
+    
+    /* === 정렬 타입에 따라 버튼 디자인 변경 === */
+    func changeSortButtonDesign() {
+        
+        let buttons = [accuracySortButton, dateSortButton, highPriceSortButton, lowPriceSortButton]
+        for (index, button) in buttons.enumerated() {
+            if let title = button.titleLabel?.text, title == howSort.title {
+                buttons[index].backgroundColor = .white
+                buttons[index].titleLabel?.textColor = .black
+            } else {
+                buttons[index].backgroundColor = .clear
+                buttons[index].titleLabel?.textColor = .white
+            }
+        }
     }
     
     
@@ -198,6 +254,27 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
 }
 
+/* ========== collectionView Prefetching extension ========== */
+extension SearchViewController: UICollectionViewDataSourcePrefetching {
+    
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        // pagination
+        
+        for indexPath in indexPaths {
+            if (indexPath.row == data.count - 1) && (startNum < 91) && (indexPath.row < totalNum) {
+                
+                startNum += 30;
+                print("pagination 실행됩니다. 바뀐 startNum : \(startNum)")
+                
+                guard let query = searchController.searchBar.text else { return }
+                callShopingList(query, SortCase.accuracy, startNum)
+            }
+        }
+    }
+    
+    
+}
+
 
 /* ========== collectionView extension ========== */
 extension SearchViewController: UISearchBarDelegate {
@@ -205,8 +282,6 @@ extension SearchViewController: UISearchBarDelegate {
     // 검색 버튼 눌렀을 때 화면 업데이트
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        guard let query = searchBar.text else { return }
-        
-        callShopingList(query)
+       searchNewData()
     }
 }

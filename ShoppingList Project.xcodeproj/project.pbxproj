@@ -31,6 +31,7 @@
 		489CAB2B2AA9C394001A4408 /* APIKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAB2A2AA9C394001A4408 /* APIKey.swift */; };
 		489CAB2D2AA9C3D0001A4408 /* ShoppingAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAB2C2AA9C3D0001A4408 /* ShoppingAPIManager.swift */; };
 		489CAB302AA9C45B001A4408 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 489CAB2F2AA9C45B001A4408 /* Alamofire */; };
+		489CAB332AA9DC51001A4408 /* SortEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAB322AA9DC51001A4408 /* SortEnum.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -54,6 +55,7 @@
 		489CAB282AA9C322001A4408 /* About.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = About.swift; sourceTree = "<group>"; };
 		489CAB2A2AA9C394001A4408 /* APIKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIKey.swift; sourceTree = "<group>"; };
 		489CAB2C2AA9C3D0001A4408 /* ShoppingAPIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShoppingAPIManager.swift; sourceTree = "<group>"; };
+		489CAB322AA9DC51001A4408 /* SortEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortEnum.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +94,7 @@
 		489CAAE62AA9A6F3001A4408 /* ShoppingList Project */ = {
 			isa = PBXGroup;
 			children = (
+				489CAB312AA9DC43001A4408 /* Enum */,
 				489CAB252AA9C1E6001A4408 /* Network */,
 				489CAB192AA9AF9B001A4408 /* Cell */,
 				489CAB082AA9A945001A4408 /* Base */,
@@ -177,6 +180,14 @@
 				489CAB2C2AA9C3D0001A4408 /* ShoppingAPIManager.swift */,
 			);
 			path = Network;
+			sourceTree = "<group>";
+		};
+		489CAB312AA9DC43001A4408 /* Enum */ = {
+			isa = PBXGroup;
+			children = (
+				489CAB322AA9DC51001A4408 /* SortEnum.swift */,
+			);
+			path = Enum;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -267,6 +278,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				489CAB2D2AA9C3D0001A4408 /* ShoppingAPIManager.swift in Sources */,
+				489CAB332AA9DC51001A4408 /* SortEnum.swift in Sources */,
 				489CAB032AA9A92D001A4408 /* SearchViewController.swift in Sources */,
 				489CAAEC2AA9A6F3001A4408 /* ViewController.swift in Sources */,
 				489CAB1B2AA9AFAF001A4408 /* BaseCollectionViewCell.swift in Sources */,

@@ -20,16 +20,36 @@ class ShoppingAPIManager {
         "X-Naver-Client-Secret" : APIKey.naverClientSecret
     ]
     
-    func callShoppingList(_ query: String, completionHandler: @escaping (Shopping) -> Void ) {
+    func callShoppingList(_ query: String, _ sortType: SortCase, _ start: Int, completionHandler: @escaping (Shopping) -> Void ) {
         
         // https://openapi.naver.com/v1/search/shop.json
         // https://openapi.naver.com/v1/search/shop.json?query=apple
         
+        // 기본 주소
+        guard let url = URL(string: "https://openapi.naver.com/v1/search/shop.json") else { return }
+        
+        // 매개변수 (쿼리 스트링)
+        // 1. 검색 문자열
         guard let txt = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else  { return }
         
-        guard let url = URL(string: "https://openapi.naver.com/v1/search/shop.json?query=\(txt)") else { return }
+        // 2. 한 번에 표시할 개수 = 30
+        let displayCntQuery = 30
         
-        AF.request(url, method: .get, headers: header)
+        // 3. 정렬 방법
+        let sortQuery = sortType.query
+        
+        // 4. 시작 위치 1 -> 31 -> 61 -> 91  done
+        let startQuery = start
+        
+        let parameter: Parameters = [
+            "query": txt,
+            "display": displayCntQuery,
+            "start": startQuery,
+            "sort": sortQuery,
+        ]
+        
+        
+        AF.request(url, method: .get, parameters: parameter, headers: header)
             .validate(statusCode: 200...500)
             .responseDecodable(of: Shopping.self) { response in
                 
