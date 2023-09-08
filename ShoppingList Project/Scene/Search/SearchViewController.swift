@@ -39,7 +39,8 @@ class SearchViewController: BaseViewController {
         let button = UIButton()
         
         button.layer.cornerRadius = 8
-        button.layer.borderColor = UIColor.white.cgColor
+        button.layer.borderColor = UIColor.systemGray.cgColor
+        button.setTitleColor(.systemGray, for: .normal)
         button.layer.borderWidth = 1
         
         button.setTitle(type.title, for: .normal)
@@ -56,7 +57,7 @@ class SearchViewController: BaseViewController {
     lazy var collectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
         
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
         
         view.register(ShoppingCollectionViewCell.self, forCellWithReuseIdentifier: ShoppingCollectionViewCell.reuseIdentifier)
         
@@ -64,8 +65,28 @@ class SearchViewController: BaseViewController {
         view.delegate = self
         view.prefetchDataSource = self
         
+    
+        
         return view
     }()
+    
+    
+    
+    /* === 정렬 타입에 따라 버튼 디자인 변경 === */
+    func changeSortButtonDesign() {
+        
+        let buttons = [accuracySortButton, dateSortButton, highPriceSortButton, lowPriceSortButton]
+        for (index, button) in buttons.enumerated() {
+            if let title = button.titleLabel?.text, title == howSort.title {
+                buttons[index].backgroundColor = .white
+                buttons[index].setTitleColor(.black, for: .normal)
+            } else {
+                buttons[index].backgroundColor = .clear
+                buttons[index].setTitleColor(.systemGray, for: .normal)
+            }
+        }
+    }
+    
     
     
     /* ========== viewDidLoad ========== */
@@ -75,32 +96,40 @@ class SearchViewController: BaseViewController {
         repository.printURL()
         
         view.backgroundColor = .systemBackground
-//        view.backgroundColor = .systemGroupedBackground
+        
+        
         
         
         /* === 네비게이션 아이템 및 서치바 커스텀 === */
-        navigationItem.searchController = searchController
-        searchController.hidesNavigationBarDuringPresentation = false   // 네비게이션 타이틀 계속 띄워주기
+        title = "쇼핑 검색"
+        navigationItem.searchController = searchController              // 서치 컨트롤러 등록
         navigationItem.hidesSearchBarWhenScrolling = false              // 스크롤 시에도 서치바 유지
-        title = "검색 창"
-        searchController.searchBar.delegate = self
+        navigationItem.searchController?.searchBar.searchTextField.backgroundColor = .systemGray6   // 서치바 배경색 지정
+        
+        searchController.hidesNavigationBarDuringPresentation = false   // 네비게이션 타이틀 계속 띄워주기
+        searchController.searchBar.delegate = self  // 프로토콜 연결
+        
+        searchController.searchBar.tintColor = .white   // 입력 글자 색상 -> 다크모드 대응 필요
+        searchController.searchBar.setValue("취소", forKey: "cancelButtonText")   // 한글로 "취소" 설정
+        searchController.searchBar.searchTextField.attributedPlaceholder = NSAttributedString(string: "검색어를 입력하세요.", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])  // 플레이스홀더 커스텀
+        
+        navigationController?.navigationBar.backgroundColor = .systemBackground // 네비게이션 바 배경색
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]   // 타이틀 색상
+        
 //        navigationItem.searchController?.searchBar.backgroundColor = .black
 //        navigationItem.searchController?.searchBar.barTintColor = .lightGray
-        navigationItem.searchController?.searchBar.searchTextField.backgroundColor = .darkGray
+        
 //        navigationItem.titleView?.backgroundColor = .black
-        navigationController?.navigationBar.backgroundColor = .black
+        
 //        navigationController?.navigationBar.tintColor = .white
         
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        //        searchController.searchBar.searchTextField.textColor = .white
         
 //        searchController.automaticallyShowsCancelButton
         
 //        searchController.searchBar.placeholder = "검색어를 입력하세요."
-        searchController.searchBar.tintColor = .white
-        searchController.searchBar.setValue("취소", forKey: "cancelButtonText")
         
-        searchController.searchBar.searchTextField.textColor = .white
-        searchController.searchBar.searchTextField.attributedPlaceholder = NSAttributedString(string: "검색어를 입력하세요.", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
+
         
 //        let image = UIImage(systemName: "magnifyingglass")?.withTintColor(.white, renderingMode: .alwaysTemplate)
 //        searchController.searchBar.setImage(image, for: UISearchBar.Icon.search, state: .normal)
@@ -138,16 +167,13 @@ class SearchViewController: BaseViewController {
         
         
         
-        /* === 정렬 버튼 addTarget === */
+        /* === 정렬 버튼 디자인 및 addTarget === */
         accuracySortButton.addTarget(self, action: #selector(accuracySortButtonClicked), for: .touchUpInside)
         dateSortButton.addTarget(self, action: #selector(dateSortButtonClicked), for: .touchUpInside)
         highPriceSortButton.addTarget(self, action: #selector(highPriceSortButtonClicked), for: .touchUpInside)
         lowPriceSortButton.addTarget(self, action: #selector(lowPriceSortButtonClicked), for: .touchUpInside)
         
-        
-        
-        /* === 초기 서버 통신 === */
-//        callShopingList("samsung", howSort, startNum)   // startNum == 1
+        changeSortButtonDesign()
     }
     
     /* ========== viewWillAppear ========== */
@@ -158,32 +184,30 @@ class SearchViewController: BaseViewController {
         collectionView.reloadData()
     }
     
+    
     /* ===== 서버 통신 함수 ===== */
     func callShopingList(_ query: String, _ sortType: SortCase, _ start: Int) {
         
-        // pagination일 때는 기존 배열에 append
-        // 새로 검색했거나 정렬 방식 바꿨을 때는 배열 초기화 후 append
-        // -> 배열 초기화는 함수 실행시키기 전에 해주는 걸로 한다
+        // case 1 (pagination) : 기존 배열에 새로운 데이터 append
+        // case 2 (reload) : 기존 배열 초기화 후 새로운 데이터 append
         
         if (query == "") {
-            // 빈 문자열 입력했을 때 예외처리
-        }else {
+            // 빈 문자열
+            // 서치바 상에서 검색이 불가능하기 때문에 들어올 수 없음
+        } else {
             ShoppingAPIManager.shared.callShoppingList(query, sortType, start) { value in
 //                print(value)
                 
-                // 새로운 검색을 하는 상황이면 스크롤을 맨 위로 올려준다
-                // "새로운 검색을 하는 상황" : startNum == 1
+                // case 2
                 if (self.startNum == 1) {
-                    self.collectionView.setContentOffset(.zero, animated: true)
-                    self.data.removeAll()
+                    self.collectionView.setContentOffset(.zero, animated: true) // 스크롤 시점 맨 위로 올림
+                    self.data.removeAll()   // 배열 초기화
                 }
                 
                 self.totalNum = value.total
-                self.data.append(contentsOf: value.items)
+                self.data.append(contentsOf: value.items)   // 새로운 데이터 append
                 
                 self.collectionView.reloadData()
-                
-                
             }
         }
     }
@@ -194,7 +218,8 @@ class SearchViewController: BaseViewController {
     }
     
     
-    /* ===== 현재 서치바의 텍스트 기반으로 새롭게 검색 후 테이블 업데이트까지 =====*/
+    /* ===== 현재 서치바 텍스트 기반으로 검색 후 테이블 업데이트 ===== */
+    // (1). return 키    (2). 정렬 버튼 4개
     func searchNewData() {
         initData()
         
@@ -207,9 +232,9 @@ class SearchViewController: BaseViewController {
     /* ===== 버튼 addTarget 액션 ===== */
     @objc
     func accuracySortButtonClicked() {
-        howSort = .accuracy
-        searchNewData()
-        changeSortButtonDesign()
+        howSort = .accuracy         // 현재 정렬 상태 변경
+        searchNewData()             // 검색 진행
+        changeSortButtonDesign()    // 버튼 디자인 변경
     }
     @objc
     func dateSortButtonClicked() {
@@ -231,26 +256,12 @@ class SearchViewController: BaseViewController {
     }
     
     
-    /* === 정렬 타입에 따라 버튼 디자인 변경 === */
-    func changeSortButtonDesign() {
-        
-        let buttons = [accuracySortButton, dateSortButton, highPriceSortButton, lowPriceSortButton]
-        for (index, button) in buttons.enumerated() {
-            if let title = button.titleLabel?.text, title == howSort.title {
-                buttons[index].backgroundColor = .white
-                buttons[index].titleLabel?.textColor = .black
-            } else {
-                buttons[index].backgroundColor = .clear
-                buttons[index].titleLabel?.textColor = .white
-            }
-        }
-    }
+    
     
     
     /* ===== set Configure / Constraints ===== */
     override func setConfigure() {
         super.setConfigure()
-        
         
         [accuracySortButton, dateSortButton, highPriceSortButton, lowPriceSortButton].forEach{ item in
             view.addSubview(item)
@@ -294,12 +305,12 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     private func collectionViewLayout() -> UICollectionViewFlowLayout {
         let layout = UICollectionViewFlowLayout()
         
-        let spacing: CGFloat = 12
+        let spacing: CGFloat = 14
         
         layout.minimumLineSpacing = spacing
         layout.minimumInteritemSpacing = spacing
         let size = UIScreen.main.bounds.width - spacing * 3
-        layout.itemSize = CGSize(width: size / 2, height: size / 2 + 100)
+        layout.itemSize = CGSize(width: size / 2, height: size / 2 + 80)
         layout.sectionInset = UIEdgeInsets(top: 0, left: spacing, bottom: 0, right: spacing)
         
         return layout
@@ -317,22 +328,17 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         cell.initialDesignCell(data[indexPath.row])
         
-        
-        // 좋아요 데이터에 있는지 확인한다
-        // 해당 제품의 product id 기준으로 판단. 다른 데이터는 변동 가능성
+        /* == 좋아요 여부 확인 후 버튼 디자인 === */
         var heart = false
         if !(repository.fetch(data[indexPath.row].productID).isEmpty) {
-            // 배열이 비어있지 않으면 좋아요 리스트에 있다는 뜻
             heart = true
         }
-        cell.checkHeartButton(heart)    // 좋아요 여부
+        cell.checkHeartButton(heart)
         
         
-        
-        
+        /* == 좋아요 버튼 콜백함수 정의 === */
         cell.heartCallBackMethod = { [weak self] in // weak 키워드 사용 -> self가 nil일 가능성
             
-            print("좋아요 버튼이 눌렸습니다")
             let item = self?.data[indexPath.row]
 
             // 1. 현재 좋아요 목록에 있는지 확인
@@ -342,63 +348,38 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
             cell.checkHeartButton(!heart)
             
             // 2. 좋아요 목록에서 해제 or 추가
-            // 2 - 1. 해제
-            // 좋아요가 이미 눌려져 있다 -> 좋아요 리스트에 있다.
-            // 리스트에서 그 애를 찾아서 꺼낸 후 (read - filter)
-            // delete 함수에 넣는다
             if (heart) {
-                if let item, let task = self?.repository.fetch(item.productID).first { // 어차피 하나밖에 없을거긴 한데, 배열 형태에서 좀 바꿔주기 위해 first 써줌
-                    
+                // 2 - 1. 해제
+                    // (1). 좋아요 리스트에서 검색
+                    // (2). 검색 결과 delete
+                    // (3). collectionView reload
+                if let item, let task = self?.repository.fetch(item.productID).first {
                     self?.repository.deleteItem(task)
-                    
-                    DispatchQueue.main.async {
-                        self?.collectionView.reloadData()
-                    }
+                    self?.collectionView.reloadData()
                 }
             }
-            // 2 - 2. 추가
             else {
+                // 2 - 2. 추가
+                    // (1). 현재 데이터 기반으로 new task 생성
+                    // (2). 이미지 따로 추가 (imageLink -> 데이터 변환)
+                    // (3). new task create
+                    // (4). collectionView reload
                 if let item {
-                    
-                    // (1). task 생성
                     let task = LikesTable(productId: item.productID, mallName: item.mallName, title: item.title, lprice: item.lprice, imageLink: item.image)
                     
-                    // 이미지 데이터로 변환
-                    //                let group = DispatchGroup()
                     let url = URL(string: item.image)
-                    //                group.enter()
-                    DispatchQueue.global().async {
+                    DispatchQueue.global().async {  // try Data : 동기
                         if let url, let data = try? Data(contentsOf: url) {
                             task.imageData = data
                         }
-                        
-                        // (2). task 추가 (이미지 데이터 저장이 끝났을 때)
-                        // realm에 접근하기 때문에 다시 main
-                        DispatchQueue.main.async {
+                        DispatchQueue.main.async {  // realm, UI : main
                             self?.repository.createItem(task)
-                            
                             self?.collectionView.reloadData()
                         }
-                        
-                        // UI 적으로 화면에 변화가 없는 부분이기 때문에 global에서 async로 돌려도 문제 없다고 판단함
-                        //                    group.leave()
                     }
-                    //                group.notify(queue: .main) {
-                    //                        print("END")
-                    //                }
                 }
             }
-       
-            
-            
-            
-            
-            
-            
-            // (3. tableView reload를 할 필요가 없다. 여기 cellForRowAt임)
-            
         }
-        
         
         return cell;
     }
@@ -407,7 +388,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         let item = data[indexPath.row]
         
-        
+        // 값 전달 : LikesTable 타입(각종 정보)과 Bool 타입(좋아요 여부)로 넘겨줌
         let task = LikesTable(productId: item.productID, mallName: item.mallName, title: item.title, lprice: item.lprice, imageLink: item.image)
         
         var heart = false
@@ -415,7 +396,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
             heart = true
         }
         
-        
+        // 화면 전환
         let vc = WebViewController()
         vc.product = task
         vc.likeOrNot = heart
@@ -433,13 +414,18 @@ extension SearchViewController: UICollectionViewDataSourcePrefetching {
         // pagination
         
         for indexPath in indexPaths {
+            // (1). indexPath.row가 현재 로드한 거의 모든 데이터까지 왔을 때
+            // (2). startNum 쿼리는 최대 100까지만 가능하기 때문에 maximum 91
+            // (3). (거의 무조건이지만) 혹시 현재 인덱스가 검색 가능한 데이터의 총량보다 적을 때
             if (indexPath.row == data.count - 1) && (startNum < 91) && (indexPath.row < totalNum) {
-                
+                // startNum : 데이터 시작 위치. 30씩 올려준다
                 startNum += 30;
-                print("pagination 실행됩니다. 바뀐 startNum : \(startNum)")
                 
                 guard let query = searchController.searchBar.text else { return }
-                callShopingList(query, SortCase.accuracy, startNum)
+                callShopingList(query, howSort, startNum)
+            }
+            else if (startNum >= 91) {
+                // 더 이상 데이터 로드 불가 얼럿
             }
         }
     }
