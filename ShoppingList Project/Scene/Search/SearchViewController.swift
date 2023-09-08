@@ -392,6 +392,26 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         return cell;
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let item = data[indexPath.row]
+        
+        
+        let task = LikesTable(productId: item.productID, mallName: item.mallName, title: item.title, lprice: item.lprice, imageLink: item.image)
+        
+        var heart = false
+        if !(repository.fetch(item.productID).isEmpty) {
+            heart = true
+        }
+        
+        
+        let vc = WebViewController()
+        vc.product = task
+        vc.likeOrNot = heart
+        
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }
 
 

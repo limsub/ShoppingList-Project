@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		489C466C2AAAE8ED00FF2E29 /* RealmModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C466B2AAAE8ED00FF2E29 /* RealmModel.swift */; };
 		489C466E2AAAEB7400FF2E29 /* LikesTableRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C466D2AAAEB7400FF2E29 /* LikesTableRepository.swift */; };
+		489C46712AAB276800FF2E29 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C46702AAB276800FF2E29 /* WebViewController.swift */; };
 		489CAAE82AA9A6F3001A4408 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAAE72AA9A6F3001A4408 /* AppDelegate.swift */; };
 		489CAAEA2AA9A6F3001A4408 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAAE92AA9A6F3001A4408 /* SceneDelegate.swift */; };
 		489CAAEC2AA9A6F3001A4408 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAAEB2AA9A6F3001A4408 /* ViewController.swift */; };
@@ -39,6 +40,7 @@
 /* Begin PBXFileReference section */
 		489C466B2AAAE8ED00FF2E29 /* RealmModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmModel.swift; sourceTree = "<group>"; };
 		489C466D2AAAEB7400FF2E29 /* LikesTableRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesTableRepository.swift; sourceTree = "<group>"; };
+		489C46702AAB276800FF2E29 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		489CAAE42AA9A6F3001A4408 /* ShoppingList Project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ShoppingList Project.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		489CAAE72AA9A6F3001A4408 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		489CAAE92AA9A6F3001A4408 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -86,6 +88,14 @@
 				489C466D2AAAEB7400FF2E29 /* LikesTableRepository.swift */,
 			);
 			path = Realm;
+			sourceTree = "<group>";
+		};
+		489C466F2AAB274D00FF2E29 /* Web */ = {
+			isa = PBXGroup;
+			children = (
+				489C46702AAB276800FF2E29 /* WebViewController.swift */,
+			);
+			path = Web;
 			sourceTree = "<group>";
 		};
 		489CAADB2AA9A6F3001A4408 = {
@@ -137,6 +147,7 @@
 		489CAAFE2AA9A902001A4408 /* Scene */ = {
 			isa = PBXGroup;
 			children = (
+				489C466F2AAB274D00FF2E29 /* Web */,
 				489CAAFF2AA9A911001A4408 /* Search */,
 				489CAB002AA9A915001A4408 /* Like */,
 				489CAB012AA9A919001A4408 /* Detail */,
@@ -292,6 +303,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				489CAB2D2AA9C3D0001A4408 /* ShoppingAPIManager.swift in Sources */,
+				489C46712AAB276800FF2E29 /* WebViewController.swift in Sources */,
 				489CAB332AA9DC51001A4408 /* SortEnum.swift in Sources */,
 				489C466E2AAAEB7400FF2E29 /* LikesTableRepository.swift in Sources */,
 				489CAB032AA9A92D001A4408 /* SearchViewController.swift in Sources */,

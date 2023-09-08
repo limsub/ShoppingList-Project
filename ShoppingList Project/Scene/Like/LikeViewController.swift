@@ -131,6 +131,18 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         return cell;
     }
     
+    
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let task = tasks?[indexPath.row]    // 웹뷰 가서 옵셔널 바인딩
+        
+        let vc = WebViewController()
+        vc.product = task
+        vc.likeOrNot = true     // 여기서 넘기면 무조건 true
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
 }
 
 /* ========== searchBar extension ========== */
