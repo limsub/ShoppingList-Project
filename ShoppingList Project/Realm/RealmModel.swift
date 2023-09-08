@@ -17,20 +17,19 @@ class LikesTable: Object {
     @Persisted var productId: String
     @Persisted var mallName: String
     @Persisted var title: String
-    @Persisted var Iprice: String
-    @Persisted var ImageLink: String
-    @Persisted var ImageData: Data?
+    @Persisted var lprice: String
+    @Persisted var imageLink: String
+    @Persisted var imageData: Data?
     
-    convenience init(_id: ObjectId, productId: String, mallName: String, title: String, Iprice: String, ImageLink: String, ImageData: Data? = nil) {
+    convenience init(productId: String, mallName: String, title: String, lprice: String, imageLink: String, imageData: Data? = nil) {
         self.init()
         
-        self._id = _id
         self.productId = productId
         self.mallName = mallName
         self.title = title
-        self.Iprice = Iprice
-        self.ImageLink = ImageLink
-        self.ImageData = ImageData
+        self.lprice = lprice
+        self.imageLink = imageLink
+        self.imageData = imageData
     }
     
 }

@@ -55,14 +55,28 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
         return label
     }()
     
-    let heartButton = {
+    lazy var heartButton = {
         let button = UIButton()
         
         button.backgroundColor = .white
         button.setImage(UIImage(systemName: "heart"), for: .normal)
         
+        button.addTarget(self, action: #selector(heartButtonClicked), for: .touchUpInside)
+        
         return button
     }()
+    
+    
+    /* ========== 좋아요 버튼 클로저 ========== */
+    var heartCallBackMethod: ( () -> Void )?
+    
+    /* ========== 좋아요 버튼 클릭 함수 ========== */
+    @objc
+    func heartButtonClicked() {
+        if let closure = heartCallBackMethod {
+            closure()
+        }
+    }
     
     /* ========== 셀 디자인 함수 ========== */
     // 초기 디자인

@@ -21,11 +21,16 @@ import UIKit
 
 class SearchViewController: BaseViewController {
     
+    
+    
     /* ========== 컬렉션뷰 데이터 ========== */
     var data: [Item] = []
     var startNum: Int = 1   // pagination (1 -> 31 -> 61 -> 91 -> done)
     var totalNum: Int = 0   // pagination 시 예외처리용 (totalNum < indexPath.row -> 페이지 추가 x. 애초에 넘어가지도 않겠네)
     var howSort = SortCase.accuracy    // 정렬 기준. 디폴트 : 정확도
+    
+    /* ========== repository pattern ========== */
+    let repository = LikesTableRepository()
     
     /* ========== 인스턴스 생성 ========== */
     let searchController = UISearchController(searchResultsController: nil)
@@ -65,6 +70,8 @@ class SearchViewController: BaseViewController {
     /* ========== viewDidLoad ========== */
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        repository.printURL()
         
         view.backgroundColor = .black
         
@@ -152,7 +159,7 @@ class SearchViewController: BaseViewController {
             // 빈 문자열 입력했을 때 예외처리
         }else {
             ShoppingAPIManager.shared.callShoppingList(query, sortType, start) { value in
-                print(value)
+//                print(value)
                 
                 // 새로운 검색을 하는 상황이면 스크롤을 맨 위로 올려준다
                 // "새로운 검색을 하는 상황" : startNum == 1
@@ -299,7 +306,77 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
 
         
         cell.initialDesignCell(data[indexPath.row])
-        cell.checkHeartButton(false)    // 좋아요 여부
+        
+        
+        // 좋아요 데이터에 있는지 확인한다
+        // 해당 제품의 product id 기준으로 판단. 다른 데이터는 변동 가능성
+        var heart = false
+        if !(repository.fetch(data[indexPath.row].productID).isEmpty) {
+            // 배열이 비어있지 않으면 좋아요 리스트에 있다는 뜻
+            heart = true
+        }
+       
+        cell.checkHeartButton(heart)    // 좋아요 여부
+        
+        cell.heartCallBackMethod = { [weak self] in // weak 키워드 사용 -> self가 nil일 가능성
+            
+            
+            print("좋아요 버튼이 눌렸습니다")
+            print(self?.data[indexPath.row])
+            
+            let item = self?.data[indexPath.row]
+            
+            
+            
+            // 1. 현재 좋아요 목록에 있는지 확인 (위에서 이어서 가져오면 되겠다)
+            // 일단 없다고 하고 가정
+            
+            // 1.5. 좋아요 버튼 이미지 토글
+            cell.checkHeartButton(true)
+            
+            // 2. 좋아요 목록에서 해제 or 추가
+            // 2 - 1. 해제
+            
+            
+            // 2 - 2. 추가
+            if let item {
+                
+                // (1). task 생성
+                let task = LikesTable(productId: item.productID, mallName: item.mallName, title: item.title, lprice: item.lprice, imageLink: item.image)
+                
+                // 이미지 데이터로 변환
+//                let group = DispatchGroup()
+                let url = URL(string: item.image)
+//                group.enter()
+                DispatchQueue.global().async {
+                    if let url, let data = try? Data(contentsOf: url) {
+                        task.imageData = data
+                    }
+                    
+                    // (2). task 추가 (이미지 데이터 저장이 끝났을 때)
+                    // realm에 접근하기 때문에 다시 main
+                    DispatchQueue.main.async {
+                        self?.repository.createItem(task)
+                    }
+                    
+                    // UI 적으로 화면에 변화가 없는 부분이기 때문에 global에서 async로 돌려도 문제 없다고 판단함
+//                    group.leave()
+                }
+//                group.notify(queue: .main) {
+//                        print("END")
+//                }
+            }
+       
+            
+            
+            
+            
+            
+            
+            // (3. tableView reload를 할 필요가 없다. 여기 cellForRowAt임)
+            
+        }
+        
         
         return cell;
     }

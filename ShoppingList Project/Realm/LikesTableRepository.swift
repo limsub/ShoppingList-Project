@@ -45,6 +45,12 @@ class LikesTableRepository: LikesTableRepositoryType {
         let data = realm.objects(LikesTable.self)
         return data
     }
+    func fetch(_ productId: String) -> Results<LikesTable> {
+        let data = realm.objects(LikesTable.self).where {
+            $0.productId == productId
+        }
+        return data
+    }
     
     
     // Update
