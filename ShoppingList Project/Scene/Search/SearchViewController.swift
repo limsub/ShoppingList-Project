@@ -38,11 +38,12 @@ class SearchViewController: BaseViewController {
     static func makeSortButton(_ type: SortCase) -> UIButton {
         let button = UIButton()
         
-        button.layer.cornerRadius = 10
+        button.layer.cornerRadius = 8
         button.layer.borderColor = UIColor.white.cgColor
         button.layer.borderWidth = 1
         
         button.setTitle(type.title, for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 15)
         
         return button
     }
@@ -73,7 +74,8 @@ class SearchViewController: BaseViewController {
         
         repository.printURL()
         
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
+//        view.backgroundColor = .systemGroupedBackground
         
         
         /* === 네비게이션 아이템 및 서치바 커스텀 === */
@@ -326,6 +328,8 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         cell.checkHeartButton(heart)    // 좋아요 여부
         
         
+        
+        
         cell.heartCallBackMethod = { [weak self] in // weak 키워드 사용 -> self가 nil일 가능성
             
             print("좋아요 버튼이 눌렸습니다")
@@ -346,6 +350,10 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 if let item, let task = self?.repository.fetch(item.productID).first { // 어차피 하나밖에 없을거긴 한데, 배열 형태에서 좀 바꿔주기 위해 first 써줌
                     
                     self?.repository.deleteItem(task)
+                    
+                    DispatchQueue.main.async {
+                        self?.collectionView.reloadData()
+                    }
                 }
             }
             // 2 - 2. 추가
@@ -368,6 +376,8 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
                         // realm에 접근하기 때문에 다시 main
                         DispatchQueue.main.async {
                             self?.repository.createItem(task)
+                            
+                            self?.collectionView.reloadData()
                         }
                         
                         // UI 적으로 화면에 변화가 없는 부분이기 때문에 global에서 async로 돌려도 문제 없다고 판단함

@@ -14,7 +14,11 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
     let posterImageView = {
         let view = UIImageView()
         
-        view.backgroundColor = .yellow
+        view.backgroundColor = .white
+        
+        view.clipsToBounds = true
+        view.layer.cornerRadius = 10
+        view.contentMode = .scaleAspectFill
         
         return view
     }()
@@ -22,7 +26,7 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
     let mallNameLabel = {
         let label = UILabel()
         
-        label.text = "몰 네임 몰 네임 몰 네임 몰 네임몰 네임 몰 네임"
+        label.text = ""
         label.numberOfLines = 1
         
         label.textColor = .lightGray
@@ -34,7 +38,7 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
     let titleLabel = {
         let label = UILabel()
         
-        label.text = "물건 이름물건 이름물건 이름물건 이름물건 이름물건 이름물건 이름"
+        label.text = ""
         label.numberOfLines = 2
         
         label.textColor = .white
@@ -46,11 +50,11 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
     let priceLabel = {
         let label = UILabel()
         
-        label.text = "물건 가격물건 가격물건 가격물건 가격물건 가격물건 가격물건 가격물건 가격"
+        label.text = ""
         label.numberOfLines = 1
         
         label.textColor = .white
-        label.font = .boldSystemFont(ofSize: 15)
+        label.font = .boldSystemFont(ofSize: 18)
         
         return label
     }()
@@ -59,7 +63,12 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
         let button = UIButton()
         
         button.backgroundColor = .white
+        
         button.setImage(UIImage(systemName: "heart"), for: .normal)
+        button.tintColor = .black
+        
+        button.clipsToBounds = true
+        button.layer.cornerRadius = 18
         
         button.addTarget(self, action: #selector(heartButtonClicked), for: .touchUpInside)
         
@@ -69,6 +78,7 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
     
     /* ========== 좋아요 버튼 클로저 ========== */
     var heartCallBackMethod: ( () -> Void )?
+    
     
     /* ========== 좋아요 버튼 클릭 함수 ========== */
     @objc
@@ -85,24 +95,35 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
         let url = URL(string: sender.image)
         posterImageView.kf.setImage(with: url)
         
-        mallNameLabel.text = sender.mallName
+        mallNameLabel.text = "[\(sender.mallName)]"
         titleLabel.text = sender.title
-        priceLabel.text = sender.lprice // 3개 단위로 쉼표 찍어주기 -> 함수 만들기
+        priceLabel.text = makePriceFormat(sender.lprice)  // 3개 단위로 쉼표 찍어주기 -> 함수 만들기
+        // count 15부터 ... 시작
+        if (priceLabel.text!.count > 14) {
+            priceLabel.font = .boldSystemFont(ofSize: 15)
+        }
+        
         heartButton.setImage(UIImage(systemName: "heart"), for: .normal)
     }
+    
     func initialDesignCellForLikesTable(_ sender: LikesTable) {
         if let imageData = sender.imageData {
             posterImageView.image = UIImage(data: imageData)
         }
-        mallNameLabel.text = sender.mallName
+        mallNameLabel.text = "[\(sender.mallName)]"
         titleLabel.text = sender.title
-        priceLabel.text = sender.lprice
+        priceLabel.text = makePriceFormat(sender.lprice)
+        // count 15부터 ... 시작
+        if (priceLabel.text!.count > 14) {
+            priceLabel.font = .boldSystemFont(ofSize: 15)
+        }
+
+        
         heartButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
     }
     
     
-    // 좋아요 버튼 체크 (or 토글)
-    // true -> fill / false -> NOT fill
+    // 좋아요 버튼 체크
     func checkHeartButton(_ sender: Bool) {
         heartButton.setImage(
             UIImage(systemName: (sender) ? "heart.fill" : "heart"),
@@ -110,11 +131,24 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
         )
     }
     
-    // 가격 쉼표 찍어주는 함수 (세자리마다)
-    func makeComma(_ sender: String) -> String {
-    
-        return ""
+    // 가격 쉼표 함수 (세자리마다)
+    func makePriceFormat(_ sender: String) -> String {
+        let str = String(sender.reversed())
+        var result = ""
+        var count = 0
+        
+        for char in str {
+            if count == 3 {
+                result.append(",")
+                count = 0
+            }
+            result.append(char)
+            count += 1
+        }
+        
+        return String(result.reversed())
     }
+    
     
     /* ========== set Configure / Constraints ========== */
     override func setConfigure() {
@@ -144,23 +178,23 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
         }
         
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(mallNameLabel.snp.bottom).offset(5)
+            make.top.equalTo(mallNameLabel.snp.bottom).offset(2)
             make.horizontalEdges.equalTo(contentView).inset(5)
             // 일단 레이블이라 높이 생략. 나중에 잡아주기
         }
         
         priceLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(5)
+            make.top.equalTo(titleLabel.snp.bottom).offset(2)
             make.horizontalEdges.equalTo(contentView).inset(5)
             make.height.equalTo(20)
             // 일단 레이블이라 높이 생략. 나중에 잡아주기
         }
         
         heartButton.snp.makeConstraints { make in
-            make.bottom.equalTo(posterImageView).inset(5)
-            make.trailing.equalTo(posterImageView).inset(5) // 두 개 합칠 수 있지 않을까?
+            make.bottom.equalTo(posterImageView).inset(6)
+            make.trailing.equalTo(posterImageView).inset(6) // 두 개 합칠 수 있지 않을까?
             
-            make.size.equalTo(50)   // 수치 조절 필요
+            make.size.equalTo(36)   // 수치 조절 필요
         }
     }
 }
