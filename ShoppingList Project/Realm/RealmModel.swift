@@ -21,6 +21,9 @@ class LikesTable: Object {
     @Persisted var imageLink: String
     @Persisted var imageData: Data?
     
+    // 등록순으로 좋아요 창에 띄워주기 위함.
+    @Persisted var time: Date
+    
     convenience init(productId: String, mallName: String, title: String, lprice: String, imageLink: String, imageData: Data? = nil) {
         self.init()
         
@@ -30,6 +33,8 @@ class LikesTable: Object {
         self.lprice = lprice
         self.imageLink = imageLink
         self.imageData = imageData
+        
+        time = Date()
     }
     
 }

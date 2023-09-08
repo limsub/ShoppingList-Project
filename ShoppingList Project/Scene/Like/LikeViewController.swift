@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 // 좋아요 창
 // 인스턴스
@@ -13,6 +14,10 @@ import UIKit
     // 컬렉션뷰
 
 class LikeViewController: BaseViewController {
+    
+    /* ========== repository pattern ========== */
+    let repository = LikesTableRepository()
+    var tasks: Results<LikesTable>?
     
     /* ========== 인스턴스 생성 ========== */
     let searchController = UISearchController(searchResultsController: nil)
@@ -31,8 +36,14 @@ class LikeViewController: BaseViewController {
     }()
     
     
+    
+    /* ========== viewDidLoad ========== */
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        tasks = repository.fetch()
+        
         
         view.backgroundColor = .red
         
@@ -42,6 +53,14 @@ class LikeViewController: BaseViewController {
         navigationItem.hidesSearchBarWhenScrolling = false
         title = "좋아요 창"
     
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        print(tasks)
+        
+        collectionView.reloadData()
     }
     
     /* ===== set Configure / set Constraints ===== */
@@ -81,12 +100,19 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        guard let tasks = tasks else { return 0 }
+        return tasks.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
+//        print(#function)
+        
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShoppingCollectionViewCell.reuseIdentifier, for: indexPath) as? ShoppingCollectionViewCell else { return UICollectionViewCell() }
+        
+        guard let tasks = tasks else { return cell }
+        
+        cell.initialDesignCellForLikesTable(tasks[indexPath.row])
         
         return cell;
     }

@@ -42,7 +42,7 @@ class LikesTableRepository: LikesTableRepositoryType {
     
     // Read
     func fetch() -> Results<LikesTable> {
-        let data = realm.objects(LikesTable.self)
+        let data = realm.objects(LikesTable.self).sorted(byKeyPath: "time", ascending: false)
         return data
     }
     func fetch(_ productId: String) -> Results<LikesTable> {

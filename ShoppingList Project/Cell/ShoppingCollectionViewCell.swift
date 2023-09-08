@@ -90,6 +90,16 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
         priceLabel.text = sender.lprice // 3개 단위로 쉼표 찍어주기 -> 함수 만들기
         heartButton.setImage(UIImage(systemName: "heart"), for: .normal)
     }
+    func initialDesignCellForLikesTable(_ sender: LikesTable) {
+        if let imageData = sender.imageData {
+            posterImageView.image = UIImage(data: imageData)
+        }
+        mallNameLabel.text = sender.mallName
+        titleLabel.text = sender.title
+        priceLabel.text = sender.lprice
+        heartButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+    }
+    
     
     // 좋아요 버튼 체크 (or 토글)
     // true -> fill / false -> NOT fill
