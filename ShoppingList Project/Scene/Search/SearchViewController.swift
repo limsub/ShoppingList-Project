@@ -394,6 +394,8 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
 }
 
+
+
 /* ========== collectionView Prefetching extension ========== */
 extension SearchViewController: UICollectionViewDataSourcePrefetching {
     
@@ -416,10 +418,11 @@ extension SearchViewController: UICollectionViewDataSourcePrefetching {
 }
 
 
-/* ========== collectionView extension ========== */
+/* ========== searchBar extension ========== */
 extension SearchViewController: UISearchBarDelegate {
     // 실시간x
     // 검색 버튼 눌렀을 때 화면 업데이트
+    // cancel 버튼 눌러도 기존 화면 유지한다
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
        searchNewData()

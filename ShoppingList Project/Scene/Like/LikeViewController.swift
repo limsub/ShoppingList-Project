@@ -52,6 +52,7 @@ class LikeViewController: BaseViewController {
         searchController.hidesNavigationBarDuringPresentation = false
         navigationItem.hidesSearchBarWhenScrolling = false
         title = "좋아요 창"
+        searchController.searchBar.delegate = self
     
     }
     
@@ -128,6 +129,34 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         }
         
         return cell;
+    }
+    
+}
+
+/* ========== searchBar extension ========== */
+extension LikeViewController: UISearchBarDelegate {
+    
+    /* ===== 현재 서치바의 텍스트 기반으로 새롭게 검색 후 테이블 업데이트까지 =====*/
+    func searchNewData() {
+        guard let txt = searchController.searchBar.text else { return }
+        
+        tasks = (txt.count == 0) ? repository.fetch() : repository.search(txt)
+        
+        collectionView.reloadData()
+    }
+    
+    // 실시간 검색
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchNewData()
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        searchNewData()
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        searchNewData()
     }
     
 }

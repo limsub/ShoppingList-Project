@@ -51,6 +51,12 @@ class LikesTableRepository: LikesTableRepositoryType {
         }
         return data
     }
+    func search(_ title: String) -> Results<LikesTable> {
+        let data = realm.objects(LikesTable.self).sorted(byKeyPath: "time", ascending: false).where {
+            $0.title.contains(title, options: .caseInsensitive)
+        }
+        return data
+    }
     
     
     // Update
