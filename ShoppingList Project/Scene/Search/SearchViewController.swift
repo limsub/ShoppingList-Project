@@ -148,6 +148,14 @@ class SearchViewController: BaseViewController {
 //        callShopingList("samsung", howSort, startNum)   // startNum == 1
     }
     
+    /* ========== viewWillAppear ========== */
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // 좋아요 창에서 넘어올 때 셀 좋아요 여부를 업데이트 해주기 위해 필요함
+        collectionView.reloadData()
+    }
+    
     /* ===== 서버 통신 함수 ===== */
     func callShopingList(_ query: String, _ sortType: SortCase, _ start: Int) {
         
@@ -337,7 +345,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
             if (heart) {
                 if let item, let task = self?.repository.fetch(item.productID).first { // 어차피 하나밖에 없을거긴 한데, 배열 형태에서 좀 바꿔주기 위해 first 써줌
                     
-                    self?.repository.deleteItem(task) 
+                    self?.repository.deleteItem(task)
                 }
             }
             // 2 - 2. 추가

@@ -55,6 +55,7 @@ class LikeViewController: BaseViewController {
     
     }
     
+    /* ========== viewWillAppear ========== */
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -113,6 +114,18 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         guard let tasks = tasks else { return cell }
         
         cell.initialDesignCellForLikesTable(tasks[indexPath.row])
+        
+        
+        // 좋아요 해제 기능
+        // 여기 화면에 있으면 무조건 좋아요가 눌린 상태
+        cell.heartCallBackMethod = { [weak self] in
+            print("좋아요 화면 : 좋아요가 해제됩니다")
+            
+            let item = tasks[indexPath.row]
+            
+            self?.repository.deleteItem(item)
+            self?.collectionView.reloadData()
+        }
         
         return cell;
     }
