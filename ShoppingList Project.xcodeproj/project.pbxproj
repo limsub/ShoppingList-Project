@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		489C466C2AAAE8ED00FF2E29 /* RealmModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C466B2AAAE8ED00FF2E29 /* RealmModel.swift */; };
+		489C466E2AAAEB7400FF2E29 /* LikesTableRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C466D2AAAEB7400FF2E29 /* LikesTableRepository.swift */; };
 		489CAAE82AA9A6F3001A4408 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAAE72AA9A6F3001A4408 /* AppDelegate.swift */; };
 		489CAAEA2AA9A6F3001A4408 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAAE92AA9A6F3001A4408 /* SceneDelegate.swift */; };
 		489CAAEC2AA9A6F3001A4408 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAAEB2AA9A6F3001A4408 /* ViewController.swift */; };
@@ -35,6 +37,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		489C466B2AAAE8ED00FF2E29 /* RealmModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmModel.swift; sourceTree = "<group>"; };
+		489C466D2AAAEB7400FF2E29 /* LikesTableRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesTableRepository.swift; sourceTree = "<group>"; };
 		489CAAE42AA9A6F3001A4408 /* ShoppingList Project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ShoppingList Project.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		489CAAE72AA9A6F3001A4408 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		489CAAE92AA9A6F3001A4408 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -75,6 +79,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		489C466A2AAAE8E100FF2E29 /* Realm */ = {
+			isa = PBXGroup;
+			children = (
+				489C466B2AAAE8ED00FF2E29 /* RealmModel.swift */,
+				489C466D2AAAEB7400FF2E29 /* LikesTableRepository.swift */,
+			);
+			path = Realm;
+			sourceTree = "<group>";
+		};
 		489CAADB2AA9A6F3001A4408 = {
 			isa = PBXGroup;
 			children = (
@@ -94,6 +107,7 @@
 		489CAAE62AA9A6F3001A4408 /* ShoppingList Project */ = {
 			isa = PBXGroup;
 			children = (
+				489C466A2AAAE8E100FF2E29 /* Realm */,
 				489CAB312AA9DC43001A4408 /* Enum */,
 				489CAB252AA9C1E6001A4408 /* Network */,
 				489CAB192AA9AF9B001A4408 /* Cell */,
@@ -279,6 +293,7 @@
 			files = (
 				489CAB2D2AA9C3D0001A4408 /* ShoppingAPIManager.swift in Sources */,
 				489CAB332AA9DC51001A4408 /* SortEnum.swift in Sources */,
+				489C466E2AAAEB7400FF2E29 /* LikesTableRepository.swift in Sources */,
 				489CAB032AA9A92D001A4408 /* SearchViewController.swift in Sources */,
 				489CAAEC2AA9A6F3001A4408 /* ViewController.swift in Sources */,
 				489CAB1B2AA9AFAF001A4408 /* BaseCollectionViewCell.swift in Sources */,
@@ -290,6 +305,7 @@
 				489CAB0A2AA9A94C001A4408 /* BaseViewController.swift in Sources */,
 				489CAB052AA9A937001A4408 /* LikeViewController.swift in Sources */,
 				489CAB1E2AA9B003001A4408 /* ShoppingCollectionViewCell.swift in Sources */,
+				489C466C2AAAE8ED00FF2E29 /* RealmModel.swift in Sources */,
 				489CAB2B2AA9C394001A4408 /* APIKey.swift in Sources */,
 				489CAB072AA9A93F001A4408 /* DetailViewController.swift in Sources */,
 			);
