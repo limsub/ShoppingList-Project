@@ -315,56 +315,60 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
             // 배열이 비어있지 않으면 좋아요 리스트에 있다는 뜻
             heart = true
         }
-       
         cell.checkHeartButton(heart)    // 좋아요 여부
+        
         
         cell.heartCallBackMethod = { [weak self] in // weak 키워드 사용 -> self가 nil일 가능성
             
-            
             print("좋아요 버튼이 눌렸습니다")
-            print(self?.data[indexPath.row])
-            
             let item = self?.data[indexPath.row]
-            
-            
-            
-            // 1. 현재 좋아요 목록에 있는지 확인 (위에서 이어서 가져오면 되겠다)
-            // 일단 없다고 하고 가정
+
+            // 1. 현재 좋아요 목록에 있는지 확인
+            // heart
             
             // 1.5. 좋아요 버튼 이미지 토글
-            cell.checkHeartButton(true)
+            cell.checkHeartButton(!heart)
             
             // 2. 좋아요 목록에서 해제 or 추가
             // 2 - 1. 해제
-            
-            
-            // 2 - 2. 추가
-            if let item {
-                
-                // (1). task 생성
-                let task = LikesTable(productId: item.productID, mallName: item.mallName, title: item.title, lprice: item.lprice, imageLink: item.image)
-                
-                // 이미지 데이터로 변환
-//                let group = DispatchGroup()
-                let url = URL(string: item.image)
-//                group.enter()
-                DispatchQueue.global().async {
-                    if let url, let data = try? Data(contentsOf: url) {
-                        task.imageData = data
-                    }
+            // 좋아요가 이미 눌려져 있다 -> 좋아요 리스트에 있다.
+            // 리스트에서 그 애를 찾아서 꺼낸 후 (read - filter)
+            // delete 함수에 넣는다
+            if (heart) {
+                if let item, let task = self?.repository.fetch(item.productID).first { // 어차피 하나밖에 없을거긴 한데, 배열 형태에서 좀 바꿔주기 위해 first 써줌
                     
-                    // (2). task 추가 (이미지 데이터 저장이 끝났을 때)
-                    // realm에 접근하기 때문에 다시 main
-                    DispatchQueue.main.async {
-                        self?.repository.createItem(task)
-                    }
-                    
-                    // UI 적으로 화면에 변화가 없는 부분이기 때문에 global에서 async로 돌려도 문제 없다고 판단함
-//                    group.leave()
+                    self?.repository.deleteItem(task) 
                 }
-//                group.notify(queue: .main) {
-//                        print("END")
-//                }
+            }
+            // 2 - 2. 추가
+            else {
+                if let item {
+                    
+                    // (1). task 생성
+                    let task = LikesTable(productId: item.productID, mallName: item.mallName, title: item.title, lprice: item.lprice, imageLink: item.image)
+                    
+                    // 이미지 데이터로 변환
+                    //                let group = DispatchGroup()
+                    let url = URL(string: item.image)
+                    //                group.enter()
+                    DispatchQueue.global().async {
+                        if let url, let data = try? Data(contentsOf: url) {
+                            task.imageData = data
+                        }
+                        
+                        // (2). task 추가 (이미지 데이터 저장이 끝났을 때)
+                        // realm에 접근하기 때문에 다시 main
+                        DispatchQueue.main.async {
+                            self?.repository.createItem(task)
+                        }
+                        
+                        // UI 적으로 화면에 변화가 없는 부분이기 때문에 global에서 async로 돌려도 문제 없다고 판단함
+                        //                    group.leave()
+                    }
+                    //                group.notify(queue: .main) {
+                    //                        print("END")
+                    //                }
+                }
             }
        
             
