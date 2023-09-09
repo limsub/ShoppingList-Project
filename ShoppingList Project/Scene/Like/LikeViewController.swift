@@ -55,6 +55,7 @@ class LikeViewController: BaseViewController {
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.delegate = self
         searchController.searchBar.searchTextField.backgroundColor = .systemGray6
+        searchController.searchBar.tintColor = .white
         searchController.searchBar.setValue("취소", forKey: "cancelButtonText")
         searchController.searchBar.searchTextField.attributedPlaceholder = NSAttributedString(string: "검색어를 입력하세요.", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
         
@@ -117,7 +118,9 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         guard let tasks = tasks else { return cell }
         
-        cell.initialDesignCellForLikesTable(tasks[indexPath.row])
+        let searchWord = searchController.searchBar.text ?? ""
+        
+        cell.initialDesignCellForLikesTable(tasks[indexPath.row], searchWord)
         
         
         // 좋아요 해제 기능

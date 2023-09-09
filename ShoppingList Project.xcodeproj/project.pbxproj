@@ -11,6 +11,7 @@
 		489C466E2AAAEB7400FF2E29 /* LikesTableRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C466D2AAAEB7400FF2E29 /* LikesTableRepository.swift */; };
 		489C46712AAB276800FF2E29 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C46702AAB276800FF2E29 /* WebViewController.swift */; };
 		489C46792AAB45A200FF2E29 /* ColorEnum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C46782AAB45A200FF2E29 /* ColorEnum.swift */; };
+		489C467F2AAC11B100FF2E29 /* UILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C467E2AAC11B100FF2E29 /* UILabel.swift */; };
 		489CAAE82AA9A6F3001A4408 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAAE72AA9A6F3001A4408 /* AppDelegate.swift */; };
 		489CAAEA2AA9A6F3001A4408 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAAE92AA9A6F3001A4408 /* SceneDelegate.swift */; };
 		489CAAEC2AA9A6F3001A4408 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAAEB2AA9A6F3001A4408 /* ViewController.swift */; };
@@ -43,6 +44,7 @@
 		489C466D2AAAEB7400FF2E29 /* LikesTableRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesTableRepository.swift; sourceTree = "<group>"; };
 		489C46702AAB276800FF2E29 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		489C46782AAB45A200FF2E29 /* ColorEnum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorEnum.swift; sourceTree = "<group>"; };
+		489C467E2AAC11B100FF2E29 /* UILabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabel.swift; sourceTree = "<group>"; };
 		489CAAE42AA9A6F3001A4408 /* ShoppingList Project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ShoppingList Project.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		489CAAE72AA9A6F3001A4408 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		489CAAE92AA9A6F3001A4408 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -107,6 +109,14 @@
 			path = Utility;
 			sourceTree = "<group>";
 		};
+		489C467D2AAC11A800FF2E29 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				489C467E2AAC11B100FF2E29 /* UILabel.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		489CAADB2AA9A6F3001A4408 = {
 			isa = PBXGroup;
 			children = (
@@ -126,6 +136,7 @@
 		489CAAE62AA9A6F3001A4408 /* ShoppingList Project */ = {
 			isa = PBXGroup;
 			children = (
+				489C467D2AAC11A800FF2E29 /* Extension */,
 				489C46752AAB456800FF2E29 /* Utility */,
 				489C466A2AAAE8E100FF2E29 /* Realm */,
 				489CAB312AA9DC43001A4408 /* Enum */,
@@ -323,6 +334,7 @@
 				489CAAE82AA9A6F3001A4408 /* AppDelegate.swift in Sources */,
 				489CAB292AA9C322001A4408 /* About.swift in Sources */,
 				489CAAFD2AA9A7DE001A4408 /* TabBarViewController.swift in Sources */,
+				489C467F2AAC11B100FF2E29 /* UILabel.swift in Sources */,
 				489CAAEA2AA9A6F3001A4408 /* SceneDelegate.swift in Sources */,
 				489C46792AAB45A200FF2E29 /* ColorEnum.swift in Sources */,
 				489CAB202AA9B680001A4408 /* ReusableProtocol.swift in Sources */,

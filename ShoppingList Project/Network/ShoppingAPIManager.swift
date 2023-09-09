@@ -42,7 +42,7 @@ class ShoppingAPIManager {
         let startQuery = start
         
         let parameter: Parameters = [
-            "query": txt,
+            "query": query,
             "display": displayCntQuery,
             "start": startQuery,
             "sort": sortQuery,

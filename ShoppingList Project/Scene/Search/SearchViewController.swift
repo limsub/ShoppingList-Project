@@ -325,8 +325,9 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShoppingCollectionViewCell.reuseIdentifier, for: indexPath) as? ShoppingCollectionViewCell else { return UICollectionViewCell() }
 
+        let searchWord = searchController.searchBar.text  ?? ""
         
-        cell.initialDesignCell(data[indexPath.row])
+        cell.initialDesignCell(data[indexPath.row], searchWord)
         
         /* == 좋아요 여부 확인 후 버튼 디자인 === */
         var heart = false

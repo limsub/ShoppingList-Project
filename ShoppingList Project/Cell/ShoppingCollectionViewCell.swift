@@ -90,34 +90,32 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
     
     /* ========== 셀 디자인 함수 ========== */
     // 초기 디자인
-    func initialDesignCell(_ sender: Item) {
+    func initialDesignCell(_ sender: Item, _ searchWord: String) {
         
         let url = URL(string: sender.image)
         posterImageView.kf.setImage(with: url)
         
         mallNameLabel.text = "[\(sender.mallName)]"
-        titleLabel.text = sender.title
-        priceLabel.text = makePriceFormat(sender.lprice)  // 3개 단위로 쉼표 찍어주기 -> 함수 만들기
-        // count 15부터 ... 시작
-        if (priceLabel.text!.count > 14) {
-            priceLabel.font = .boldSystemFont(ofSize: 15)
-        }
+        
+        titleLabel.removeTag(sender.title)  // <b> 태그 지우고 title로 설정
+        titleLabel.makeBoldWord(searchWord) // 검색한 단어 bold 폰트로 변경
+        
+        priceLabel.makePriceFormat(sender.lprice)
         
         heartButton.setImage(UIImage(systemName: "heart"), for: .normal)
     }
     
-    func initialDesignCellForLikesTable(_ sender: LikesTable) {
+    func initialDesignCellForLikesTable(_ sender: LikesTable, _ searchWord: String) {
         if let imageData = sender.imageData {
             posterImageView.image = UIImage(data: imageData)
         }
+        
         mallNameLabel.text = "[\(sender.mallName)]"
-        titleLabel.text = sender.title
-        priceLabel.text = makePriceFormat(sender.lprice)
-        // count 15부터 ... 시작
-        if (priceLabel.text!.count > 14) {
-            priceLabel.font = .boldSystemFont(ofSize: 15)
-        }
-
+        
+        titleLabel.removeTag(sender.title)
+        titleLabel.makeBoldWord(searchWord)
+        
+        priceLabel.makePriceFormat(sender.lprice)
         
         heartButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
     }
@@ -131,23 +129,7 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
         )
     }
     
-    // 가격 쉼표 함수 (세자리마다)
-    func makePriceFormat(_ sender: String) -> String {
-        let str = String(sender.reversed())
-        var result = ""
-        var count = 0
-        
-        for char in str {
-            if count == 3 {
-                result.append(",")
-                count = 0
-            }
-            result.append(char)
-            count += 1
-        }
-        
-        return String(result.reversed())
-    }
+
     
     
     /* ========== set Configure / Constraints ========== */
