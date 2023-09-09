@@ -180,12 +180,21 @@ class WebViewController: BaseViewController, WKUIDelegate {
         // 좋아요 목록에 추가
         else {
             
+            // 1). 잘 들어와서 잘 좋아요 누름
+            // 2). 네트워크 끊긴 채로 들어옴 -> imageData 없음
+                // 2 - 1). 끊긴 상태 그대로 좋아요 추가 -> imageData 없는 채로 추가
+                // 2 - 2). 좋아요를 누르는 시점에 네트워크 연결이 되어있음 -> imageData 있는 채로 추가
+            
             print("좋아요 목록에 추가됩니다")
             
             // 1. 데이터 생성 (다른 PK를 만들어주기 위함)
             guard let newProduct = newProduct else { return }
             
             let addProduct = LikesTable(productId: newProduct.productId, mallName: newProduct.mallName, title: newProduct.title, lprice: newProduct.lprice, imageLink: newProduct.imageLink, imageData: newProduct.imageData)
+            
+            if (addProduct.imageData == nil) {
+                showAlert("이전 화면에서 이미지 데이터를 받아오지 못했습니다", "이미지를 제외한 데이터만 저장됩니다")
+            }
             
             // 2. 데이터 추가
             repository.createItem(addProduct)
