@@ -44,7 +44,6 @@ class WebViewController: BaseViewController, WKUIDelegate {
         // + image Data 저장 -> 이미 데이터 처리가 되어있어서 바로 가능
         
         
-        
         loadWebView()
         
         /* === 네비게이션 커스텀 === */
@@ -57,40 +56,54 @@ class WebViewController: BaseViewController, WKUIDelegate {
             target: self,
             action: #selector(heartButtonClicked)
         )
-        
-        
         navigationItem.rightBarButtonItem = heartButton
-        
-        
     }
     
     @objc
     func heartButtonClicked() {
         
+        print("좋아요 버튼이 눌렸습니다")
         
         
         // 좋아요 목록에서 해제
         if likeOrNot {
             
+            print("좋아요 목록에서 해제됩니다")
+            
             // 1. 찾기
             guard let newProduct = newProduct else { return }
             guard let task = repository.fetch(newProduct.productId).first else { return }
-            
+            print("저장된 데이터를 찾았습니다 :")
+            print(task)
 
-            // 2. 지우기
+            // 2. 데이터 제거
             repository.deleteItem(task)
-            
             
             // 3. 이미지 변경
             heartButton?.image = UIImage(systemName: "heart")
+            
+            // 4. 인스턴스 데이터 변경
+            likeOrNot = false
         }
         
         // 좋아요 목록에 추가
         else {
+            
+            print("좋아요 목록에 추가됩니다")
+            
+            // 1. 데이터 생성 (다른 PK를 만들어주기 위함)
             guard let newProduct = newProduct else { return }
-            repository.createItem(newProduct)
+            
+            let addProduct = LikesTable(productId: newProduct.productId, mallName: newProduct.mallName, title: newProduct.title, lprice: newProduct.lprice, imageLink: newProduct.imageLink, imageData: newProduct.imageData)
+            
+            // 2. 데이터 추가
+            repository.createItem(addProduct)
+            
+            // 3. 이미지 변경
             heartButton?.image = UIImage(systemName: "heart.fill")
             
+            // 4. 인스턴스 데이터 변경
+            likeOrNot = true
         }
         
     }
