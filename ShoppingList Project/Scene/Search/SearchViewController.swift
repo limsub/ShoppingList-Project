@@ -65,6 +65,8 @@ class SearchViewController: BaseViewController {
         view.delegate = self
         view.prefetchDataSource = self
         
+        view.keyboardDismissMode = .onDrag
+        
     
         
         return view
@@ -116,56 +118,6 @@ class SearchViewController: BaseViewController {
         navigationController?.navigationBar.backgroundColor = .systemBackground // 네비게이션 바 배경색
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]   // 타이틀 색상
         navigationController?.navigationBar.tintColor = .white
-        
-//        navigationItem.searchController?.searchBar.backgroundColor = .black
-//        navigationItem.searchController?.searchBar.barTintColor = .lightGray
-        
-//        navigationItem.titleView?.backgroundColor = .black
-        
-//        navigationController?.navigationBar.tintColor = .white
-        
-        //        searchController.searchBar.searchTextField.textColor = .white
-        
-//        searchController.automaticallyShowsCancelButton
-        
-//        searchController.searchBar.placeholder = "검색어를 입력하세요."
-        
-
-        
-//        let image = UIImage(systemName: "magnifyingglass")?.withTintColor(.white, renderingMode: .alwaysTemplate)
-//        searchController.searchBar.setImage(image, for: UISearchBar.Icon.search, state: .normal)
-        
-//
-//
-//
-//        //왼쪽 서치아이콘 이미지 세팅하기
-//        searchController.searchBar.setImage(UIImage(named: "icSearchNonW"), for: UISearchBar.Icon.search, state: .normal)
-//                //오른쪽 x버튼 이미지 세팅하기
-//        searchController.searchBar.setImage(UIImage(named: "icCancel"), for: .clear, state: .normal)
-//
-//        if let textfield = searchController.searchBar.value(forKey: "searchField") as? UITextField {
-////                    //서치바 백그라운드 컬러
-////                    textfield.backgroundColor = UIColor.black
-////                    //플레이스홀더 글씨 색 정하기
-////                    textfield.attributedPlaceholder = NSAttributedString(string: textfield.placeholder ?? "", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
-////                    //서치바 텍스트입력시 색 정하기
-////                    textfield.textColor = UIColor.white
-//                    //왼쪽 아이콘 이미지넣기
-//                    if let leftView = textfield.leftView as? UIImageView {
-//                        leftView.image = leftView.image?.withRenderingMode(.alwaysTemplate)
-//                        //이미지 틴트컬러 정하기
-//                        leftView.tintColor = UIColor.white
-//                    }
-//                    //오른쪽 x버튼 이미지넣기
-//                    if let rightView = textfield.rightView as? UIImageView {
-//                        rightView.image = rightView.image?.withRenderingMode(.alwaysTemplate)
-//                        //이미지 틴트 정하기
-//                        rightView.tintColor = UIColor.white
-//                    }
-//
-//                }
-        
-        
         
         
         /* === 정렬 버튼 디자인 및 addTarget === */
@@ -244,24 +196,28 @@ class SearchViewController: BaseViewController {
     /* ===== 버튼 addTarget 액션 ===== */
     @objc
     func accuracySortButtonClicked() {
+        searchController.searchBar.resignFirstResponder()   // 키보드 내림
         howSort = .accuracy         // 현재 정렬 상태 변경
         searchNewData()             // 검색 진행
         changeSortButtonDesign()    // 버튼 디자인 변경
     }
     @objc
     func dateSortButtonClicked() {
+        searchController.searchBar.resignFirstResponder()
         howSort = .date
         searchNewData()
         changeSortButtonDesign()
     }
     @objc
     func highPriceSortButtonClicked() {
+        searchController.searchBar.resignFirstResponder()
         howSort = .highPrice
         searchNewData()
         changeSortButtonDesign()
     }
     @objc
     func lowPriceSortButtonClicked() {
+        searchController.searchBar.resignFirstResponder()
         howSort = .lowPrice
         searchNewData()
         changeSortButtonDesign()
@@ -400,6 +356,8 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        searchController.searchBar.resignFirstResponder()
         
         let item = data[indexPath.row]
         

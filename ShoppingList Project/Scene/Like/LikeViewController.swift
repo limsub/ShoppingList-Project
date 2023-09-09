@@ -32,6 +32,8 @@ class LikeViewController: BaseViewController {
         view.dataSource = self
         view.delegate = self
         
+        view.keyboardDismissMode = .onDrag
+        
         return view
     }()
     
@@ -150,6 +152,8 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        searchController.searchBar.resignFirstResponder()
         
         let task = tasks?[indexPath.row]
         
