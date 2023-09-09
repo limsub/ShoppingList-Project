@@ -15,6 +15,7 @@
 		489C46812AAC511200FF2E29 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C46802AAC511200FF2E29 /* NetworkMonitor.swift */; };
 		489C46832AAC556000FF2E29 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C46822AAC556000FF2E29 /* Alert.swift */; };
 		489C46862AAC60DF00FF2E29 /* SkeletonView in Frameworks */ = {isa = PBXBuildFile; productRef = 489C46852AAC60DF00FF2E29 /* SkeletonView */; };
+		489C46882AACA15700FF2E29 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C46872AACA15700FF2E29 /* UIColor.swift */; };
 		489CAAE82AA9A6F3001A4408 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAAE72AA9A6F3001A4408 /* AppDelegate.swift */; };
 		489CAAEA2AA9A6F3001A4408 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAAE92AA9A6F3001A4408 /* SceneDelegate.swift */; };
 		489CAAEC2AA9A6F3001A4408 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAAEB2AA9A6F3001A4408 /* ViewController.swift */; };
@@ -49,6 +50,7 @@
 		489C467E2AAC11B100FF2E29 /* UILabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabel.swift; sourceTree = "<group>"; };
 		489C46802AAC511200FF2E29 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
 		489C46822AAC556000FF2E29 /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
+		489C46872AACA15700FF2E29 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		489CAAE42AA9A6F3001A4408 /* ShoppingList Project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ShoppingList Project.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		489CAAE72AA9A6F3001A4408 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		489CAAE92AA9A6F3001A4408 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 			children = (
 				489C467E2AAC11B100FF2E29 /* UILabel.swift */,
 				489C46822AAC556000FF2E29 /* Alert.swift */,
+				489C46872AACA15700FF2E29 /* UIColor.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -340,6 +343,7 @@
 				489CAAE82AA9A6F3001A4408 /* AppDelegate.swift in Sources */,
 				489C46832AAC556000FF2E29 /* Alert.swift in Sources */,
 				489CAB292AA9C322001A4408 /* About.swift in Sources */,
+				489C46882AACA15700FF2E29 /* UIColor.swift in Sources */,
 				489CAAFD2AA9A7DE001A4408 /* TabBarViewController.swift in Sources */,
 				489C467F2AAC11B100FF2E29 /* UILabel.swift in Sources */,
 				489CAAEA2AA9A6F3001A4408 /* SceneDelegate.swift in Sources */,

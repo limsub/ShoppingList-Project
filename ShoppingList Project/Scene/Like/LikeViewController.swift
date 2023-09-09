@@ -60,13 +60,13 @@ class LikeViewController: BaseViewController {
         searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.delegate = self
         searchController.searchBar.searchTextField.backgroundColor = .systemGray6
-        searchController.searchBar.tintColor = .white
+        searchController.searchBar.tintColor = .labelColor
         searchController.searchBar.setValue("취소", forKey: "cancelButtonText")
         searchController.searchBar.searchTextField.attributedPlaceholder = NSAttributedString(string: "검색어를 입력하세요.", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
         
         navigationController?.navigationBar.backgroundColor = .systemBackground
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
-        navigationController?.navigationBar.tintColor = .white
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.labelColor]
+        navigationController?.navigationBar.tintColor = .labelColor
     
     }
     

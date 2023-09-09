@@ -15,7 +15,7 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
     let posterImageView = {
         let view = UIImageView()
         
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         
         view.tintColor = .lightGray
         
@@ -44,7 +44,7 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
         label.text = ""
         label.numberOfLines = 2
         
-        label.textColor = .white
+        label.textColor = .labelColor
         label.font = .systemFont(ofSize: 13)
         
         return label
@@ -56,7 +56,7 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
         label.text = ""
         label.numberOfLines = 1
         
-        label.textColor = .white
+        label.textColor = .labelColor
         label.font = .boldSystemFont(ofSize: 18)
         
         return label
@@ -65,10 +65,10 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
     lazy var heartButton = {
         let button = UIButton()
         
-        button.backgroundColor = .white
+        button.backgroundColor = .labelColor
         
         button.setImage(UIImage(systemName: "heart"), for: .normal)
-        button.tintColor = .black
+        button.tintColor = .systemBackground
         
         button.clipsToBounds = true
         button.layer.cornerRadius = 18
@@ -130,9 +130,11 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
         
         let url = URL(string: sender.image)
         posterImageView.kf.setImage(with: url)  // 여기가 네트워크 통신
+        posterImageView.contentMode = .scaleAspectFill
         
         if !NetworkMonitor.shared.isConnected && (posterImageView.image == UIImage(systemName: "photo") || posterImageView.image == nil)  {   // 이미 다운이 완료된 이미지는 살려주기 위함
             posterImageView.image = UIImage(systemName: "photo")
+            posterImageView.contentMode = .scaleAspectFit
         }
         
         mallNameLabel.text = "[\(sender.mallName)]"
@@ -148,8 +150,10 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
     func initialDesignCellForLikesTable(_ sender: LikesTable, _ searchWord: String) {
         if let imageData = sender.imageData {
             posterImageView.image = UIImage(data: imageData)
+            posterImageView.contentMode = .scaleAspectFill
         } else {
             posterImageView.image = UIImage(systemName: "photo")
+            posterImageView.contentMode = .scaleAspectFit
         }
         
         mallNameLabel.text = "[\(sender.mallName)]"
@@ -178,7 +182,7 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
     override func setConfigure() {
         super.setConfigure()
         
-        contentView.backgroundColor = .black
+        contentView.backgroundColor = .systemBackground
         
         contentView.addSubview(posterImageView)
         contentView.addSubview(mallNameLabel)

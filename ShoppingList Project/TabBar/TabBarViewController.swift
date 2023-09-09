@@ -28,9 +28,9 @@ class TabBarViewController: UITabBarController {
         
         
         /* 탭바 커스텀 */
-        tabBar.backgroundColor = .black                   // 배경 black
-        tabBar.tintColor = .white                         // 선택된 탭 white
-        tabBar.unselectedItemTintColor = .systemGray2     // 기본 gray
+        tabBar.backgroundColor = .systemBackground
+        tabBar.tintColor = .labelColor
+        tabBar.unselectedItemTintColor = .systemGray2     
         
         let tabItem = [navigationSearch, navigationLike]
         
