@@ -19,9 +19,8 @@ import UIKit
     // 버튼 4개랑 컬렉션뷰 따로
 
 
+
 class SearchViewController: BaseViewController {
-    
-    
     
     /* ========== 컬렉션뷰 데이터 ========== */
     var data: [Item] = []
@@ -94,11 +93,13 @@ class SearchViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        tabBarController?.delegate = self
+        
         repository.printURL()
         
         view.backgroundColor = .systemBackground
         
-        
+
         
         
         /* === 네비게이션 아이템 및 서치바 커스텀 === */
@@ -131,6 +132,8 @@ class SearchViewController: BaseViewController {
     /* ========== viewWillAppear ========== */
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        tabBarController?.delegate = self
         
         // 좋아요 창에서 넘어올 때 셀 좋아요 여부를 업데이트 해주기 위해 필요함
         collectionView.reloadData()
@@ -431,5 +434,22 @@ extension SearchViewController: UISearchBarDelegate {
         if (checkAllSpace(searchingWord)) { return }    // 공백만 있는 문자열은 검색 x
         
         searchNewData()
+    }
+}
+
+
+/* ========== tabBar extension ========== */
+extension SearchViewController: UITabBarControllerDelegate {
+    
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+
+        let currentIndex = tabBarController.selectedIndex
+        let currentVC = tabBarController.viewControllers?[currentIndex]
+
+        if  currentVC != viewController { return true }
+
+        self.collectionView.setContentOffset(.zero, animated: true) // 스크롤 시점 맨 위로
+
+        return false
     }
 }

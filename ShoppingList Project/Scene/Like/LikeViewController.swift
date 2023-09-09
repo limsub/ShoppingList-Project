@@ -43,6 +43,9 @@ class LikeViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+
+        
         // 데이터 불러오기
         tasks = repository.fetch()
         
@@ -71,6 +74,7 @@ class LikeViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        tabBarController?.delegate = self
         collectionView.reloadData()
     }
     
@@ -189,5 +193,22 @@ extension LikeViewController: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.text = ""
         searchNewData()
+    }
+}
+
+
+/* ========== tabBar extension ========== */
+extension LikeViewController: UITabBarControllerDelegate {
+
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+
+        let currentIndex = tabBarController.selectedIndex
+        let currentVC = tabBarController.viewControllers?[currentIndex]
+
+        if  currentVC != viewController { return true }
+
+        self.collectionView.setContentOffset(.zero, animated: true) // 스크롤 시점 맨 위로
+
+        return false
     }
 }

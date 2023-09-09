@@ -12,6 +12,7 @@ class TabBarViewController: UITabBarController {
     let searchVC = SearchViewController()
     let likeVC = LikeViewController()
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -31,10 +32,14 @@ class TabBarViewController: UITabBarController {
         tabBar.tintColor = .white                         // 선택된 탭 white
         tabBar.unselectedItemTintColor = .systemGray2     // 기본 gray
         
+        let tabItem = [navigationSearch, navigationLike]
         
+        self.viewControllers = tabItem
+        print(self)
+        print(self.viewControllers)
         
-        setViewControllers([navigationSearch, navigationLike], animated: true)
+        setViewControllers(tabItem, animated: true)
     }
     
-  
+    
 }
