@@ -35,6 +35,35 @@ class WebViewController: BaseViewController, WKUIDelegate {
         return button
     }
     
+    let disConnectedView = {
+        let view = UIView()
+        
+        view.backgroundColor = .clear
+        
+        let label = UILabel()
+        label.text = "네트워크 연결이 끊겼습니다\n연결 상태를 확인해주세요"
+        label.textColor = .lightGray
+        label.numberOfLines = 2
+        label.textAlignment = .center
+        
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "xmark")
+        imageView.tintColor = .lightGray
+        
+        view.addSubview(imageView)
+        view.addSubview(label)
+        imageView.snp.makeConstraints { make in
+            make.center.equalTo(view)
+            make.size.equalTo(100)
+        }
+        label.snp.makeConstraints { make in
+            make.top.equalTo(imageView.snp.bottom).offset(10)
+            make.centerX.equalTo(view)
+        }
+        
+        return view
+    }()
+    
     
     /* ===== repository pattern ====== */
     let repository = LikesTableRepository()
@@ -50,7 +79,9 @@ class WebViewController: BaseViewController, WKUIDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("좋아요 여부 : \(likeOrNot)")
+        view.backgroundColor = .systemBackground
+        
+        webView.navigationDelegate = self
         
         guard let product = product else { return }
         
@@ -60,14 +91,13 @@ class WebViewController: BaseViewController, WKUIDelegate {
         
         // + image Data 저장 -> 이미 데이터 처리가 되어있어서 바로 가능
         
+        
         loadWebView()
+        
         
         /* === 네비게이션 커스텀 === */
         title = setTitleText(product.title)
         
-        
-        
-        /* === 좋아요 버튼 (rightBarButtonItem) === */
         heartButton = UIBarButtonItem(
             image: UIImage(systemName: (likeOrNot) ? "heart.fill" : "heart"),
             style: .plain,
@@ -77,7 +107,7 @@ class WebViewController: BaseViewController, WKUIDelegate {
         navigationItem.rightBarButtonItem = heartButton
     }
     
-    func setTitleText(_ sender: String) -> String{
+    func setTitleText(_ sender: String) -> String {
         
         var ans = sender
         
@@ -153,6 +183,7 @@ class WebViewController: BaseViewController, WKUIDelegate {
         view.addSubview(backwardButton)
         view.addSubview(forwardButton)
         view.addSubview(reloadButton)
+        view.addSubview(disConnectedView)
         
         backwardButton.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
         forwardButton.setImage(UIImage(systemName: "chevron.forward"), for: .normal)
@@ -160,6 +191,8 @@ class WebViewController: BaseViewController, WKUIDelegate {
         backwardButton.addTarget(self, action: #selector(backwardButtonClicked), for: .touchUpInside)
         forwardButton.addTarget(self, action: #selector(forwardButtonClicked), for: .touchUpInside)
         reloadButton.addTarget(self, action: #selector(reloadButtonClicked), for: .touchUpInside)
+        
+        disConnectedView.isHidden = true
     }
     
     override func setConstraints() {
@@ -184,6 +217,26 @@ class WebViewController: BaseViewController, WKUIDelegate {
             make.trailing.equalTo(view).inset(30)
         }
         
+        disConnectedView.snp.makeConstraints { make in
+            make.center.equalTo(view)
+            make.size.equalTo(200)
+        }
+        
+    }
+}
+
+extension WebViewController: WKNavigationDelegate {
+    
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        webView.isHidden = true
+        disConnectedView.isHidden = false
+        print("로드 실패")
+    }
+    
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
+        webView.isHidden = false
+        disConnectedView.isHidden = true
+        print("로드 성공")
     }
 }
 
@@ -193,13 +246,8 @@ extension WebViewController {
     func loadWebView() {
         
         guard let product = self.product else { return }
-        
         guard let url = URL(string: "https://msearch.shopping.naver.com/product/\(product.productId)") else { return }
-        
-            
         let request = URLRequest(url: url)
-            
-        
         self.webView.load(request)
         
         // [Security] This method should not be called on the main thread as it may lead to UI unresponsiveness.
@@ -208,6 +256,10 @@ extension WebViewController {
     // 새로고침
     @objc
     func reloadButtonClicked() {
+        // 로드 실패한 상황이었으면 웹뷰 다시 로드한다
+        if (webView.isHidden) {
+            loadWebView()
+        }
         webView.reload()
     }
     
