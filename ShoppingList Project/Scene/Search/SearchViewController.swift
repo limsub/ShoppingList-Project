@@ -391,17 +391,33 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         // 값 전달 : LikesTable 타입(각종 정보)과 Bool 타입(좋아요 여부)로 넘겨줌
         let task = LikesTable(productId: item.productID, mallName: item.mallName, title: item.title, lprice: item.lprice, imageLink: item.image)
         
+        // 좋아요 여부 체크
         var heart = false
         if !(repository.fetch(item.productID).isEmpty) {
             heart = true
         }
         
-        // 화면 전환
-        let vc = WebViewController()
-        vc.product = task
-        vc.likeOrNot = heart
+        // + 이미지 데이터 추가
+        let url = URL(string: item.image)
+        DispatchQueue.global().async {
+            if let url, let data = try? Data(contentsOf: url) {
+                task.imageData = data
+            }
+            
+            // 데이터 추가가 완료된 이후, 화면 전환
+            // 화면 전환
+            DispatchQueue.main.async {
+                let vc = WebViewController()
+                vc.product = task
+                vc.likeOrNot = heart
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+        }
         
-        navigationController?.pushViewController(vc, animated: true)
+        
+        
+        
+
     }
 }
 

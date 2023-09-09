@@ -15,8 +15,10 @@ import WebKit
 
 class WebViewController: BaseViewController, WKUIDelegate {
     
+    // 웹뷰
     var webView = WKWebView()
     
+    // repository pattern
     let repository = LikesTableRepository()
     
     /* ===== 값전달 인스턴스 ===== */
@@ -31,10 +33,13 @@ class WebViewController: BaseViewController, WKUIDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print("좋아요 여부 : \(likeOrNot)")
+        
         guard let product = product else { return }
         
         // new product 생성
         newProduct = LikesTable(productId: product.productId, mallName: product.mallName, title: product.title, lprice: product.lprice, imageLink: product.imageLink, imageData: product.imageData)
+        print(newProduct)
         
         // + image Data 저장 -> 이미 데이터 처리가 되어있어서 바로 가능
         
