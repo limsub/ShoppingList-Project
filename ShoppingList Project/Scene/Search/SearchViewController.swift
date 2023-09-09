@@ -412,6 +412,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
             // 화면 전환
             DispatchQueue.main.async {
                 let vc = WebViewController()
+                vc.previousVC = self
                 vc.product = task
                 vc.likeOrNot = heart
                 self.navigationController?.pushViewController(vc, animated: true)

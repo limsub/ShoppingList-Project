@@ -15,6 +15,8 @@ import WebKit
 
 class WebViewController: BaseViewController, WKUIDelegate {
     
+    var previousVC: UIViewController?
+    
     /* ===== 인스턴스 ===== */
     var webView = WKWebView()
     var heartButton: UIBarButtonItem?
@@ -105,6 +107,11 @@ class WebViewController: BaseViewController, WKUIDelegate {
             action: #selector(heartButtonClicked)
         )
         navigationItem.rightBarButtonItem = heartButton
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.delegate = self
     }
     
     func setTitleText(_ sender: String) -> String {
@@ -277,5 +284,23 @@ extension WebViewController {
         if webView.canGoForward {
             webView.goForward()
         }
+    }
+}
+
+
+/* ========== tabBar extension ========== */
+extension WebViewController: UITabBarControllerDelegate {
+    
+    // 탭 아이템 선택 시 이전 화면 돌아가기
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+
+        let currentIndex = tabBarController.selectedIndex
+        let currentVC = tabBarController.viewControllers?[currentIndex]
+
+        if  currentVC != previousVC { return true }
+        
+        navigationController?.popViewController(animated: true)
+
+        return false
     }
 }

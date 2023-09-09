@@ -162,6 +162,7 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let task = tasks?[indexPath.row]
         
         let vc = WebViewController()
+        vc.previousVC = self
         vc.product = task
         vc.likeOrNot = true
         navigationController?.pushViewController(vc, animated: true)
