@@ -28,6 +28,7 @@ class SearchViewController: BaseViewController {
     var startNum: Int = 1   // pagination (1 -> 31 -> 61 -> 91 -> done)
     var totalNum: Int = 0   // pagination 시 예외처리용 (totalNum < indexPath.row -> 페이지 추가 x. 애초에 넘어가지도 않겠네)
     var howSort = SortCase.accuracy    // 정렬 기준. 디폴트 : 정확도
+    var searchingWord: String = ""          // 현재 로드된 데이터들의 검색 단어 -> 검색 시에만 업데이트.
     
     /* ========== repository pattern ========== */
     let repository = LikesTableRepository()
@@ -66,9 +67,7 @@ class SearchViewController: BaseViewController {
         view.prefetchDataSource = self
         
         view.keyboardDismissMode = .onDrag
-        
-    
-        
+
         return view
     }()
     
@@ -176,9 +175,8 @@ class SearchViewController: BaseViewController {
     func searchNewData() {
         initData()
         
-        guard let query = searchController.searchBar.text else { return }
+        let query = searchingWord
         
-        if (checkAllSpace(query)) { return }    // 공백만 있는 문자열은 검색 x
         
         callShopingList(query, howSort, startNum)
     }
@@ -293,11 +291,8 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShoppingCollectionViewCell.reuseIdentifier, for: indexPath) as? ShoppingCollectionViewCell else { return UICollectionViewCell() }
 
-        var searchWord = searchController.searchBar.text  ?? ""
         
-        if (checkAllSpace(searchWord)) { searchWord = "" }
-        
-        cell.initialDesignCell(data[indexPath.row], searchWord)
+        cell.initialDesignCell(data[indexPath.row], searchingWord)
         
         /* == 좋아요 여부 확인 후 버튼 디자인 === */
         var heart = false
@@ -399,8 +394,9 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
 /* ========== collectionView Prefetching extension ========== */
 extension SearchViewController: UICollectionViewDataSourcePrefetching {
     
+    // pagination
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
-        // pagination
+        
         
         for indexPath in indexPaths {
             // (1). indexPath.row가 현재 로드한 거의 모든 데이터까지 왔을 때
@@ -411,9 +407,7 @@ extension SearchViewController: UICollectionViewDataSourcePrefetching {
                 startNum += 30;
                 
                 // 데이터를 초기화하는 부분이 아니기 때문에 searchNewData 실행하지 않는다
-                guard let query = searchController.searchBar.text else { return }
-                if (checkAllSpace(query)) { return }
-                callShopingList(query, howSort, startNum)
+                callShopingList(searchingWord, howSort, startNum)
             }
             else if (startNum >= 91) {
                 // 더 이상 데이터 로드 불가 얼럿
@@ -432,6 +426,10 @@ extension SearchViewController: UISearchBarDelegate {
     // cancel 버튼 눌러도 기존 화면 유지한다
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-       searchNewData()
+        searchingWord = searchController.searchBar.text ?? ""
+        
+        if (checkAllSpace(searchingWord)) { return }    // 공백만 있는 문자열은 검색 x
+        
+        searchNewData()
     }
 }
