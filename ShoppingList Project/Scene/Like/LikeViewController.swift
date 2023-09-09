@@ -25,7 +25,7 @@ class LikeViewController: BaseViewController {
     lazy var collectionView = {
         let view = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout())
         
-        view.backgroundColor = .red
+        view.backgroundColor = .systemBackground
         
         view.register(ShoppingCollectionViewCell.self, forCellWithReuseIdentifier: ShoppingCollectionViewCell.reuseIdentifier)
         
@@ -41,26 +41,31 @@ class LikeViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
+        // 데이터 불러오기
         tasks = repository.fetch()
         
         
-        view.backgroundColor = .red
+        view.backgroundColor = .systemBackground
         
-        /* === 네비게이션 아이템 커스텀 === */
+        /* === 네비게이션 아이템 및 서치바 커스텀 === */
+        title = "좋아요 목록"
         navigationItem.searchController = searchController
-        searchController.hidesNavigationBarDuringPresentation = false
         navigationItem.hidesSearchBarWhenScrolling = false
-        title = "좋아요 창"
+        
+        searchController.hidesNavigationBarDuringPresentation = false
         searchController.searchBar.delegate = self
+        searchController.searchBar.searchTextField.backgroundColor = .systemGray6
+        searchController.searchBar.setValue("취소", forKey: "cancelButtonText")
+        searchController.searchBar.searchTextField.attributedPlaceholder = NSAttributedString(string: "검색어를 입력하세요.", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])
+        
+        navigationController?.navigationBar.backgroundColor = .systemBackground
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
     
     }
     
     /* ========== viewWillAppear ========== */
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        print(tasks)
         
         collectionView.reloadData()
     }
@@ -89,12 +94,12 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     private func collectionViewLayout() -> UICollectionViewFlowLayout {
         let layout = UICollectionViewFlowLayout()
         
-        let spacing: CGFloat = 12
+        let spacing: CGFloat = 14
         
         layout.minimumLineSpacing = spacing
         layout.minimumInteritemSpacing = spacing
         let size = UIScreen.main.bounds.width - spacing * 3
-        layout.itemSize = CGSize(width: size / 2, height: size / 2 + 100)
+        layout.itemSize = CGSize(width: size / 2, height: size / 2 + 80)
         layout.sectionInset = UIEdgeInsets(top: 0, left: spacing, bottom: 0, right: spacing)
         
         return layout
@@ -108,8 +113,6 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-//        print(#function)
-        
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShoppingCollectionViewCell.reuseIdentifier, for: indexPath) as? ShoppingCollectionViewCell else { return UICollectionViewCell() }
         
         guard let tasks = tasks else { return cell }
@@ -118,7 +121,6 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         
         // 좋아요 해제 기능
-        // 여기 화면에 있으면 무조건 좋아요가 눌린 상태
         cell.heartCallBackMethod = { [weak self] in
             print("좋아요 화면 : 좋아요가 해제됩니다")
             
@@ -135,11 +137,11 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        let task = tasks?[indexPath.row]    // 웹뷰 가서 옵셔널 바인딩
+        let task = tasks?[indexPath.row]
         
         let vc = WebViewController()
         vc.product = task
-        vc.likeOrNot = true     // 여기서 넘기면 무조건 true
+        vc.likeOrNot = true
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -170,5 +172,4 @@ extension LikeViewController: UISearchBarDelegate {
         searchBar.text = ""
         searchNewData()
     }
-    
 }
