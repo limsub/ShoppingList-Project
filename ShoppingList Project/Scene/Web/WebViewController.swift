@@ -87,11 +87,15 @@ class WebViewController: BaseViewController, WKUIDelegate {
         
         guard let product = product else { return }
         
-        // new product 생성
+        // new product 생성 (현재 화면에 떠있는 제품)
         newProduct = LikesTable(productId: product.productId, mallName: product.mallName, title: product.title, lprice: product.lprice, imageLink: product.imageLink, imageData: product.imageData)
         print(newProduct)
         
         // + image Data 저장 -> 이미 데이터 처리가 되어있어서 바로 가능
+        
+        // likeOrNot을 값전달로 받긴 했지만, 그건 초기값이고
+        // 실질적인 값은 realm을 통해서 찾아야 한다
+        // productId가 있으면 likeOrNot = true
         
         
         loadWebView()
@@ -111,7 +115,21 @@ class WebViewController: BaseViewController, WKUIDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        guard let newProduct = newProduct else { return }
+        
+        if repository.fetch(newProduct.productId).isEmpty {
+            likeOrNot = false
+        } else {
+            likeOrNot = true
+        }
+        
+        guard let heartButton = heartButton else { return }
+        heartButton.image = UIImage(systemName: (likeOrNot) ? "heart.fill" : "heart")
+        
         tabBarController?.delegate = self
+        
+        
     }
     
     func setTitleText(_ sender: String) -> String {
