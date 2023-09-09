@@ -20,7 +20,15 @@ class ShoppingAPIManager {
         "X-Naver-Client-Secret" : APIKey.naverClientSecret
     ]
     
-    func callShoppingList(_ query: String, _ sortType: SortCase, _ start: Int, completionHandler: @escaping (Shopping) -> Void ) {
+    func callShoppingList(_ query: String, _ sortType: SortCase, _ start: Int, completionHandler: @escaping (Shopping) -> Void, showAlertWhenNetworkDisconnected: @escaping () -> Void ) {
+        
+        // 네트워크 체크
+        if !NetworkMonitor.shared.isConnected {
+            print("네트워크 통신이 불가합니다")
+            showAlertWhenNetworkDisconnected()
+            return
+        }
+        
         
         // https://openapi.naver.com/v1/search/shop.json
         // https://openapi.naver.com/v1/search/shop.json?query=apple

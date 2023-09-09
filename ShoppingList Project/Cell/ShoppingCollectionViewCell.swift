@@ -88,6 +88,10 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
         }
     }
     
+    override func prepareForReuse() {
+        posterImageView.image = nil
+    }
+    
     /* ========== 셀 디자인 함수 ========== */
     // 초기 디자인
     func initialDesignCell(_ sender: Item, _ searchWord: String) {

@@ -85,6 +85,7 @@ class SearchViewController: BaseViewController {
                 buttons[index].setTitleColor(.systemGray, for: .normal)
             }
         }
+        
     }
     
     
@@ -163,7 +164,11 @@ class SearchViewController: BaseViewController {
                 self.data.append(contentsOf: value.items)   // 새로운 데이터 append
                 
                 self.collectionView.reloadData()
+            } showAlertWhenNetworkDisconnected: {
+                self.showAlert("네트워크 연결이 끊겼습니다", "목록을 불러올 수 없습니다")
             }
+            
+            
         }
     }
     
@@ -198,30 +203,50 @@ class SearchViewController: BaseViewController {
     @objc
     func accuracySortButtonClicked() {
         searchController.searchBar.resignFirstResponder()   // 키보드 내림
-        howSort = .accuracy         // 현재 정렬 상태 변경
-        searchNewData()             // 검색 진행
-        changeSortButtonDesign()    // 버튼 디자인 변경
+        
+        if NetworkMonitor.shared.isConnected {
+            howSort = .accuracy         // 현재 정렬 상태 변경
+            searchNewData()             // 검색 진행
+            changeSortButtonDesign()    // 버튼 디자인 변경
+        } else {
+            showAlert("네트워크 연결이 끊겼습니다", "해당 기능을 사용할 수 없습니다")
+        }
     }
     @objc
     func dateSortButtonClicked() {
         searchController.searchBar.resignFirstResponder()
-        howSort = .date
-        searchNewData()
-        changeSortButtonDesign()
+        
+        if NetworkMonitor.shared.isConnected {
+            howSort = .date
+            searchNewData()
+            changeSortButtonDesign()
+        } else {
+            showAlert("네트워크 연결이 끊겼습니다", "해당 기능을 사용할 수 없습니다")
+        }
     }
     @objc
     func highPriceSortButtonClicked() {
         searchController.searchBar.resignFirstResponder()
-        howSort = .highPrice
-        searchNewData()
-        changeSortButtonDesign()
+        
+        if NetworkMonitor.shared.isConnected {
+            howSort = .highPrice
+            searchNewData()
+            changeSortButtonDesign()
+        } else {
+            showAlert("네트워크 연결이 끊겼습니다", "해당 기능을 사용할 수 없습니다")
+        }
     }
     @objc
     func lowPriceSortButtonClicked() {
         searchController.searchBar.resignFirstResponder()
-        howSort = .lowPrice
-        searchNewData()
-        changeSortButtonDesign()
+        
+        if NetworkMonitor.shared.isConnected {
+            howSort = .lowPrice
+            searchNewData()
+            changeSortButtonDesign()
+        } else {
+            showAlert("네트워크 연결이 끊겼습니다", "해당 기능을 사용할 수 없습니다")
+        }
     }
     
     
@@ -307,6 +332,12 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         /* == 좋아요 버튼 콜백함수 정의 === */
         cell.heartCallBackMethod = { [weak self] in // weak 키워드 사용 -> self가 nil일 가능성
+            
+            
+            // 네트워크 통신이 끊겼을 경우 -> 이미지를 제외한 값만 디비에 저장 가능
+            if (!NetworkMonitor.shared.isConnected) {
+                self?.showAlert("네트워크 연결이 끊겼습니다", "이미지를 제외한 데이터만 저장됩니다")
+            }
             
             let item = self?.data[indexPath.row]
 
