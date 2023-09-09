@@ -60,11 +60,12 @@ class WebViewController: BaseViewController, WKUIDelegate {
         
         // + image Data 저장 -> 이미 데이터 처리가 되어있어서 바로 가능
         
-        
         loadWebView()
         
         /* === 네비게이션 커스텀 === */
-        title = product.title
+        title = setTitleText(product.title)
+        
+        
         
         /* === 좋아요 버튼 (rightBarButtonItem) === */
         heartButton = UIBarButtonItem(
@@ -74,6 +75,24 @@ class WebViewController: BaseViewController, WKUIDelegate {
             action: #selector(heartButtonClicked)
         )
         navigationItem.rightBarButtonItem = heartButton
+    }
+    
+    func setTitleText(_ sender: String) -> String{
+        
+        var ans = sender
+        
+        // <b> 태그 제거
+        ans = ans.replacingOccurrences(of: "<b>", with: "")
+        ans = ans.replacingOccurrences(of: "</b>", with: "")
+        
+        // count 10 이상이면 잘라주기
+        if ans.count > 10 {
+            let index = ans.index(ans.startIndex, offsetBy: 10)
+            ans = String(ans.prefix(upTo: index))
+            ans = ans + "..."
+        }
+        
+        return ans
     }
     
     @objc

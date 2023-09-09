@@ -61,6 +61,7 @@ class LikeViewController: BaseViewController {
         
         navigationController?.navigationBar.backgroundColor = .systemBackground
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+        navigationController?.navigationBar.tintColor = .white
     
     }
     

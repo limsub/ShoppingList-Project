@@ -115,6 +115,7 @@ class SearchViewController: BaseViewController {
         
         navigationController?.navigationBar.backgroundColor = .systemBackground // 네비게이션 바 배경색
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]   // 타이틀 색상
+        navigationController?.navigationBar.tintColor = .white
         
 //        navigationItem.searchController?.searchBar.backgroundColor = .black
 //        navigationItem.searchController?.searchBar.barTintColor = .lightGray
