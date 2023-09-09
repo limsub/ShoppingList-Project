@@ -22,6 +22,8 @@ import UIKit
 
 class SearchViewController: BaseViewController {
     
+    var goEndScroll = false
+    
     /* ========== 컬렉션뷰 데이터 ========== */
     var data: [Item] = []
     var startNum: Int = 1   // pagination (1 -> 31 -> 61 -> 91 -> done)
@@ -439,17 +441,58 @@ extension SearchViewController: UICollectionViewDataSourcePrefetching {
             // (1). indexPath.row가 현재 로드한 거의 모든 데이터까지 왔을 때
             // (2). startNum 쿼리는 최대 100까지만 가능하기 때문에 maximum 91
             // (3). (거의 무조건이지만) 혹시 현재 인덱스가 검색 가능한 데이터의 총량보다 적을 때
-            if (indexPath.row == data.count - 1) && (startNum < 91) && (indexPath.row < totalNum) {
-                // startNum : 데이터 시작 위치. 30씩 올려준다
-                startNum += 30;
-                
-                // 데이터를 초기화하는 부분이 아니기 때문에 searchNewData 실행하지 않는다
-                callShopingList(searchingWord, howSort, startNum)
+            if (indexPath.row == data.count - 1) && (startNum < 91) && (indexPath.row < totalNum ) {
+                if (NetworkMonitor.shared.isConnected) {
+                    // startNum : 데이터 시작 위치. 30씩 올려준다
+                    startNum += 30;
+                    // 데이터를 초기화하는 부분이 아니기 때문에 searchNewData 실행하지 않는다
+                    callShopingList(searchingWord, howSort, startNum)
+                } else {
+                    goEndScroll = true  // 밑까지 왔는데, 네트워크 통신 끊긴 상황
+                    showAlert("네트워크 연결이 끊겼습니다", "데이터를 불러올 수 없습니다")
+                }
             }
-            else if (startNum >= 91) {
-                // 더 이상 데이터 로드 불가 얼럿
+            else if (indexPath.row == data.count - 1) && (startNum >= 91) {
+                 showAlert("모든 데이터를 불렀습니다", "더 이상 불러올 수 없습니다")
             }
         }
+    }
+    
+    // 네트워크가 끊긴 상태에서 스크롤을 맨 밑까지 내리면
+    // indexPath는 끝까지 찍었기 때문에
+    // 네트워크가 다시 연결되어도 바로 pagination이 실행되지 않는다.
+    // 위로 살짝 올렸다가 내리면, 다시 prefetchItem이 실행되면서 pagination이 실행된다
+    
+    // 해결 방안 -> scroll height를 계산한다
+    
+    // 위에 방법이 기본이고, 밑에 방법은 딱 네트워크 끊겼다가 다시 연결되었을 때 용
+    
+}
+
+extension SearchViewController: UIScrollViewDelegate {
+    
+    
+    
+    
+    // 조건
+    // 1. 거의 다 스크롤 한 상태인가
+    // 2. pagination이 가능한 상태인가 (startNum < 91)
+    // 3. 네트워크 연결이 되어있는가
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print(scrollView.contentSize.height, scrollView.contentOffset.y, startNum)
+        if ( scrollView.contentSize.height - scrollView.contentOffset.y < 700  && startNum < 91 && NetworkMonitor.shared.isConnected && goEndScroll) {
+            print("pagination (scroll) 실행")
+            startNum += 30
+            goEndScroll = false
+            
+            callShopingList(searchingWord, howSort, startNum)
+            
+        }
+//        else if scrollView.contentSize.height - scrollView.contentOffset.y < 700  && startNum >= 91 {
+//            // 뽀너스로 끝까지 도착했을 때 얼럿도 얘가 띄워줌
+//            showAlert("모든 데이터를 불렀습니다", "더 이상 불러올 수 없습니다")
+//            goEndScroll = false
+//        }
     }
     
     
