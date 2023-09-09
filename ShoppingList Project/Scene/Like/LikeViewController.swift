@@ -118,7 +118,9 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         guard let tasks = tasks else { return cell }
         
-        let searchWord = searchController.searchBar.text ?? ""
+        var searchWord = searchController.searchBar.text ?? ""
+        
+        if (checkAllSpace(searchWord)) { searchWord = "" }
         
         cell.initialDesignCellForLikesTable(tasks[indexPath.row], searchWord)
         
@@ -134,6 +136,14 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         }
         
         return cell;
+    }
+    
+    func checkAllSpace(_ sender: String) -> Bool {
+        let set = CharacterSet.whitespaces
+        
+        let str = sender.trimmingCharacters(in: set)
+        
+        return str.isEmpty
     }
     
     

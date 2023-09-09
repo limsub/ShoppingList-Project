@@ -224,7 +224,18 @@ class SearchViewController: BaseViewController {
         initData()
         
         guard let query = searchController.searchBar.text else { return }
+        
+        if (checkAllSpace(query)) { return }    // 공백만 있는 문자열은 검색 x
+        
         callShopingList(query, howSort, startNum)
+    }
+    
+    func checkAllSpace(_ sender: String) -> Bool {
+        let set = CharacterSet.whitespaces
+        
+        let str = sender.trimmingCharacters(in: set)
+        
+        return str.isEmpty
     }
     
     
@@ -325,7 +336,9 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShoppingCollectionViewCell.reuseIdentifier, for: indexPath) as? ShoppingCollectionViewCell else { return UICollectionViewCell() }
 
-        let searchWord = searchController.searchBar.text  ?? ""
+        var searchWord = searchController.searchBar.text  ?? ""
+        
+        if (checkAllSpace(searchWord)) { searchWord = "" }
         
         cell.initialDesignCell(data[indexPath.row], searchWord)
         
@@ -438,7 +451,9 @@ extension SearchViewController: UICollectionViewDataSourcePrefetching {
                 // startNum : 데이터 시작 위치. 30씩 올려준다
                 startNum += 30;
                 
+                // 데이터를 초기화하는 부분이 아니기 때문에 searchNewData 실행하지 않는다
                 guard let query = searchController.searchBar.text else { return }
+                if (checkAllSpace(query)) { return }
                 callShopingList(query, howSort, startNum)
             }
             else if (startNum >= 91) {

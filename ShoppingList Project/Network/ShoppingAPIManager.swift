@@ -30,7 +30,7 @@ class ShoppingAPIManager {
         
         // 매개변수 (쿼리 스트링)
         // 1. 검색 문자열
-        guard let txt = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else  { return }
+//        guard let txt = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else  { return }
         
         // 2. 한 번에 표시할 개수 = 30
         let displayCntQuery = 30
