@@ -8,6 +8,7 @@
 import UIKit
 import Kingfisher
 
+
 class ShoppingCollectionViewCell: BaseCollectionViewCell {
     
     /* ========== 인스턴스 생성 ========== */
@@ -15,6 +16,8 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
         let view = UIImageView()
         
         view.backgroundColor = .white
+        
+        view.tintColor = .lightGray
         
         view.clipsToBounds = true
         view.layer.cornerRadius = 10
@@ -75,6 +78,30 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
         return button
     }()
     
+    let noImageView = {
+        let view = UIView()
+        
+        let label = UILabel()
+        label.text = "no image"
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "photo")
+        imageView.tintColor = .lightGray
+        
+        view.addSubview(label)
+        view.addSubview(imageView)
+        
+        imageView.snp.makeConstraints { make in
+            make.center.equalTo(view)
+            make.size.equalTo(50)
+        }
+        label.snp.makeConstraints { make in
+            make.centerX.equalTo(view)
+            make.top.equalTo(imageView.snp.bottom).offset(8)
+        }
+        
+        return view
+    }()
+    
     
     /* ========== 좋아요 버튼 클로저 ========== */
     var heartCallBackMethod: ( () -> Void )?
@@ -88,8 +115,13 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
         }
     }
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+//        posterImageView.image = UIImage(systemName: "photo")
+    }
+    
     override func prepareForReuse() {
-        posterImageView.image = nil
+//        posterImageView.image = nil
     }
     
     /* ========== 셀 디자인 함수 ========== */
@@ -97,7 +129,11 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
     func initialDesignCell(_ sender: Item, _ searchWord: String) {
         
         let url = URL(string: sender.image)
-        posterImageView.kf.setImage(with: url)
+        posterImageView.kf.setImage(with: url)  // 여기가 네트워크 통신
+        
+        if !NetworkMonitor.shared.isConnected && (posterImageView.image == UIImage(systemName: "photo") || posterImageView.image == nil)  {   // 이미 다운이 완료된 이미지는 살려주기 위함
+            posterImageView.image = UIImage(systemName: "photo")
+        }
         
         mallNameLabel.text = "[\(sender.mallName)]"
         
@@ -112,6 +148,8 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
     func initialDesignCellForLikesTable(_ sender: LikesTable, _ searchWord: String) {
         if let imageData = sender.imageData {
             posterImageView.image = UIImage(data: imageData)
+        } else {
+            posterImageView.image = UIImage(systemName: "photo")
         }
         
         mallNameLabel.text = "[\(sender.mallName)]"

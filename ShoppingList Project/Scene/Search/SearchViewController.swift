@@ -334,10 +334,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         cell.heartCallBackMethod = { [weak self] in // weak 키워드 사용 -> self가 nil일 가능성
             
             
-            // 네트워크 통신이 끊겼을 경우 -> 이미지를 제외한 값만 디비에 저장 가능
-            if (!NetworkMonitor.shared.isConnected) {
-                self?.showAlert("네트워크 연결이 끊겼습니다", "이미지를 제외한 데이터만 저장됩니다")
-            }
+            
             
             let item = self?.data[indexPath.row]
 
@@ -359,6 +356,11 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 }
             }
             else {
+                // 네트워크 통신이 끊겼을 경우 -> 이미지를 제외한 값만 디비에 저장 가능
+                if (!NetworkMonitor.shared.isConnected) {
+                    self?.showAlert("네트워크 연결이 끊겼습니다", "이미지를 제외한 데이터만 저장됩니다")
+                }
+                
                 // 2 - 2. 추가
                     // (1). 현재 데이터 기반으로 new task 생성
                     // (2). 이미지 따로 추가 (imageLink -> 데이터 변환)

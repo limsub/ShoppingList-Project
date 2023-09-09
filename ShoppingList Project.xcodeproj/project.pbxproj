@@ -14,6 +14,7 @@
 		489C467F2AAC11B100FF2E29 /* UILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C467E2AAC11B100FF2E29 /* UILabel.swift */; };
 		489C46812AAC511200FF2E29 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C46802AAC511200FF2E29 /* NetworkMonitor.swift */; };
 		489C46832AAC556000FF2E29 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C46822AAC556000FF2E29 /* Alert.swift */; };
+		489C46862AAC60DF00FF2E29 /* SkeletonView in Frameworks */ = {isa = PBXBuildFile; productRef = 489C46852AAC60DF00FF2E29 /* SkeletonView */; };
 		489CAAE82AA9A6F3001A4408 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAAE72AA9A6F3001A4408 /* AppDelegate.swift */; };
 		489CAAEA2AA9A6F3001A4408 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAAE92AA9A6F3001A4408 /* SceneDelegate.swift */; };
 		489CAAEC2AA9A6F3001A4408 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAAEB2AA9A6F3001A4408 /* ViewController.swift */; };
@@ -25,7 +26,6 @@
 		489CAB052AA9A937001A4408 /* LikeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAB042AA9A937001A4408 /* LikeViewController.swift */; };
 		489CAB072AA9A93F001A4408 /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAB062AA9A93E001A4408 /* DetailViewController.swift */; };
 		489CAB0A2AA9A94C001A4408 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAB092AA9A94C001A4408 /* BaseViewController.swift */; };
-		489CAB0D2AA9A990001A4408 /* Zip in Frameworks */ = {isa = PBXBuildFile; productRef = 489CAB0C2AA9A990001A4408 /* Zip */; };
 		489CAB102AA9A999001A4408 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 489CAB0F2AA9A999001A4408 /* Kingfisher */; };
 		489CAB132AA9A9B2001A4408 /* Realm in Frameworks */ = {isa = PBXBuildFile; productRef = 489CAB122AA9A9B2001A4408 /* Realm */; };
 		489CAB152AA9A9B2001A4408 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 489CAB142AA9A9B2001A4408 /* RealmSwift */; };
@@ -81,7 +81,7 @@
 				489CAB132AA9A9B2001A4408 /* Realm in Frameworks */,
 				489CAB102AA9A999001A4408 /* Kingfisher in Frameworks */,
 				489CAB302AA9C45B001A4408 /* Alamofire in Frameworks */,
-				489CAB0D2AA9A990001A4408 /* Zip in Frameworks */,
+				489C46862AAC60DF00FF2E29 /* SkeletonView in Frameworks */,
 				489CAB182AA9A9C1001A4408 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -260,12 +260,12 @@
 			);
 			name = "ShoppingList Project";
 			packageProductDependencies = (
-				489CAB0C2AA9A990001A4408 /* Zip */,
 				489CAB0F2AA9A999001A4408 /* Kingfisher */,
 				489CAB122AA9A9B2001A4408 /* Realm */,
 				489CAB142AA9A9B2001A4408 /* RealmSwift */,
 				489CAB172AA9A9C1001A4408 /* SnapKit */,
 				489CAB2F2AA9C45B001A4408 /* Alamofire */,
+				489C46852AAC60DF00FF2E29 /* SkeletonView */,
 			);
 			productName = "ShoppingList Project";
 			productReference = 489CAAE42AA9A6F3001A4408 /* ShoppingList Project.app */;
@@ -296,11 +296,11 @@
 			);
 			mainGroup = 489CAADB2AA9A6F3001A4408;
 			packageReferences = (
-				489CAB0B2AA9A990001A4408 /* XCRemoteSwiftPackageReference "Zip" */,
 				489CAB0E2AA9A999001A4408 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				489CAB112AA9A9B2001A4408 /* XCRemoteSwiftPackageReference "realm-swift" */,
 				489CAB162AA9A9C1001A4408 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				489CAB2E2AA9C45B001A4408 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				489C46842AAC60DF00FF2E29 /* XCRemoteSwiftPackageReference "SkeletonView" */,
 			);
 			productRefGroup = 489CAAE52AA9A6F3001A4408 /* Products */;
 			projectDirPath = "";
@@ -579,12 +579,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		489CAB0B2AA9A990001A4408 /* XCRemoteSwiftPackageReference "Zip" */ = {
+		489C46842AAC60DF00FF2E29 /* XCRemoteSwiftPackageReference "SkeletonView" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/marmelroy/Zip.git";
+			repositoryURL = "https://github.com/Juanpe/SkeletonView";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
+				minimumVersion = 1.0.0;
 			};
 		};
 		489CAB0E2AA9A999001A4408 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
@@ -622,10 +622,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		489CAB0C2AA9A990001A4408 /* Zip */ = {
+		489C46852AAC60DF00FF2E29 /* SkeletonView */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 489CAB0B2AA9A990001A4408 /* XCRemoteSwiftPackageReference "Zip" */;
-			productName = Zip;
+			package = 489C46842AAC60DF00FF2E29 /* XCRemoteSwiftPackageReference "SkeletonView" */;
+			productName = SkeletonView;
 		};
 		489CAB0F2AA9A999001A4408 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
