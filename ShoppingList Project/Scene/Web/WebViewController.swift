@@ -15,21 +15,38 @@ import WebKit
 
 class WebViewController: BaseViewController, WKUIDelegate {
     
-    // 웹뷰
+    /* ===== 인스턴스 ===== */
     var webView = WKWebView()
-    
-    // repository pattern
-    let repository = LikesTableRepository()
-    
-    /* ===== 값전달 인스턴스 ===== */
-    var product: LikesTable?
-    var likeOrNot: Bool = false     // 최대한 빠르게 화면에 보여주기 위함
-    
-    
     var heartButton: UIBarButtonItem?
+    
+    let backwardButton = makeCircleButton()
+    let forwardButton = makeCircleButton()
+    let reloadButton = makeCircleButton()
+    
+    static func makeCircleButton() -> UIButton{
+        let button = UIButton()
+        
+        button.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5)
+        button.layer.borderColor = UIColor.lightGray.cgColor
+        button.layer.cornerRadius = 20
+        
+        button.tintColor = .black
+        
+        return button
+    }
+    
+    
+    /* ===== repository pattern ====== */
+    let repository = LikesTableRepository()
     var newProduct: LikesTable?
     
     
+    /* ===== 값전달 인스턴스 ===== */
+    var product: LikesTable?
+    var likeOrNot: Bool = false
+    
+    
+    /* ===== viewDidLoad ===== */
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -109,11 +126,21 @@ class WebViewController: BaseViewController, WKUIDelegate {
     }
     
    
-    
+    /* ===== set configure / constraints ===== */
     override func setConfigure() {
         super.setConfigure()
         
         view.addSubview(webView)
+        view.addSubview(backwardButton)
+        view.addSubview(forwardButton)
+        view.addSubview(reloadButton)
+        
+        backwardButton.setImage(UIImage(systemName: "chevron.backward"), for: .normal)
+        forwardButton.setImage(UIImage(systemName: "chevron.forward"), for: .normal)
+        reloadButton.setImage(UIImage(systemName: "goforward"), for: .normal)
+        backwardButton.addTarget(self, action: #selector(backwardButtonClicked), for: .touchUpInside)
+        forwardButton.addTarget(self, action: #selector(forwardButtonClicked), for: .touchUpInside)
+        reloadButton.addTarget(self, action: #selector(reloadButtonClicked), for: .touchUpInside)
     }
     
     override func setConstraints() {
@@ -122,8 +149,23 @@ class WebViewController: BaseViewController, WKUIDelegate {
         webView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
         }
+        backwardButton.snp.makeConstraints { make in
+            make.size.equalTo(40)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
+            make.leading.equalTo(view).inset(30)
+        }
+        reloadButton.snp.makeConstraints { make in
+            make.size.equalTo(40)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
+            make.centerX.equalTo(view)
+        }
+        forwardButton.snp.makeConstraints { make in
+            make.size.equalTo(40)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(20)
+            make.trailing.equalTo(view).inset(30)
+        }
+        
     }
-
 }
 
 extension WebViewController {
@@ -141,17 +183,28 @@ extension WebViewController {
         
         self.webView.load(request)
         
-            
-        // main thread 에러.. webView 때문에 출력되는데 글로벌로 돌리면 아예 애러남
-        
+        // [Security] This method should not be called on the main thread as it may lead to UI unresponsiveness.
     }
     
     // 새로고침
-
+    @objc
+    func reloadButtonClicked() {
+        webView.reload()
+    }
     
     // 뒤로가기
-    
+    @objc
+    func backwardButtonClicked() {
+        if webView.canGoBack {
+            webView.goBack()
+        }
+    }
     
     // 앞으로 가기
-    
+    @objc
+    func forwardButtonClicked() {
+        if webView.canGoForward {
+            webView.goForward()
+        }
+    }
 }
