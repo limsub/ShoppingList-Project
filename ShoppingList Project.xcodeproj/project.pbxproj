@@ -18,8 +18,6 @@
 		489C46882AACA15700FF2E29 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C46872AACA15700FF2E29 /* UIColor.swift */; };
 		489CAAE82AA9A6F3001A4408 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAAE72AA9A6F3001A4408 /* AppDelegate.swift */; };
 		489CAAEA2AA9A6F3001A4408 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAAE92AA9A6F3001A4408 /* SceneDelegate.swift */; };
-		489CAAEC2AA9A6F3001A4408 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAAEB2AA9A6F3001A4408 /* ViewController.swift */; };
-		489CAAEF2AA9A6F3001A4408 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 489CAAED2AA9A6F3001A4408 /* Main.storyboard */; };
 		489CAAF12AA9A6F6001A4408 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 489CAAF02AA9A6F6001A4408 /* Assets.xcassets */; };
 		489CAAF42AA9A6F6001A4408 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 489CAAF22AA9A6F6001A4408 /* LaunchScreen.storyboard */; };
 		489CAAFD2AA9A7DE001A4408 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489CAAFC2AA9A7DE001A4408 /* TabBarViewController.swift */; };
@@ -54,8 +52,6 @@
 		489CAAE42AA9A6F3001A4408 /* ShoppingList Project.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ShoppingList Project.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		489CAAE72AA9A6F3001A4408 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		489CAAE92AA9A6F3001A4408 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		489CAAEB2AA9A6F3001A4408 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		489CAAEE2AA9A6F3001A4408 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		489CAAF02AA9A6F6001A4408 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		489CAAF32AA9A6F6001A4408 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		489CAAF52AA9A6F6001A4408 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -155,8 +151,6 @@
 				489CAAFB2AA9A796001A4408 /* TabBar */,
 				489CAAE72AA9A6F3001A4408 /* AppDelegate.swift */,
 				489CAAE92AA9A6F3001A4408 /* SceneDelegate.swift */,
-				489CAAEB2AA9A6F3001A4408 /* ViewController.swift */,
-				489CAAED2AA9A6F3001A4408 /* Main.storyboard */,
 				489CAAF02AA9A6F6001A4408 /* Assets.xcassets */,
 				489CAAF22AA9A6F6001A4408 /* LaunchScreen.storyboard */,
 				489CAAF52AA9A6F6001A4408 /* Info.plist */,
@@ -322,7 +316,6 @@
 				489CAB242AA9C1DE001A4408 /* .gitignore in Resources */,
 				489CAAF42AA9A6F6001A4408 /* LaunchScreen.storyboard in Resources */,
 				489CAAF12AA9A6F6001A4408 /* Assets.xcassets in Resources */,
-				489CAAEF2AA9A6F3001A4408 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,7 +331,6 @@
 				489CAB332AA9DC51001A4408 /* SortEnum.swift in Sources */,
 				489C466E2AAAEB7400FF2E29 /* LikesTableRepository.swift in Sources */,
 				489CAB032AA9A92D001A4408 /* SearchViewController.swift in Sources */,
-				489CAAEC2AA9A6F3001A4408 /* ViewController.swift in Sources */,
 				489CAB1B2AA9AFAF001A4408 /* BaseCollectionViewCell.swift in Sources */,
 				489CAAE82AA9A6F3001A4408 /* AppDelegate.swift in Sources */,
 				489C46832AAC556000FF2E29 /* Alert.swift in Sources */,
@@ -362,14 +354,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		489CAAED2AA9A6F3001A4408 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				489CAAEE2AA9A6F3001A4408 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		489CAAF22AA9A6F6001A4408 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
