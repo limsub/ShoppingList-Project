@@ -187,9 +187,9 @@ class SearchViewController: BaseViewController {
         
         let query = searchingWord
         
-        
         callShopingList(query, howSort, startNum)
     }
+    
     
     func checkAllSpace(_ sender: String) -> Bool {
         let set = CharacterSet.whitespaces
@@ -335,9 +335,6 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         /* == 좋아요 버튼 콜백함수 정의 === */
         cell.heartCallBackMethod = { [weak self] in // weak 키워드 사용 -> self가 nil일 가능성
             
-            
-            
-            
             let item = self?.data[indexPath.row]
 
             // 1. 현재 좋아요 목록에 있는지 확인
@@ -436,7 +433,6 @@ extension SearchViewController: UICollectionViewDataSourcePrefetching {
     // pagination
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         
-        
         for indexPath in indexPaths {
             // (1). indexPath.row가 현재 로드한 거의 모든 데이터까지 왔을 때
             // (2). startNum 쿼리는 최대 100까지만 가능하기 때문에 maximum 91
@@ -470,10 +466,7 @@ extension SearchViewController: UICollectionViewDataSourcePrefetching {
 }
 
 extension SearchViewController: UIScrollViewDelegate {
-    
-    
-    
-    
+
     // 조건
     // 1. 거의 다 스크롤 한 상태인가
     // 2. pagination이 가능한 상태인가 (startNum < 91)
@@ -506,10 +499,20 @@ extension SearchViewController: UISearchBarDelegate {
     // cancel 버튼 눌러도 기존 화면 유지한다
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        searchingWord = searchController.searchBar.text ?? ""
         
-        if (checkAllSpace(searchingWord)) { return }    // 공백만 있는 문자열은 검색 x
+        let currentSearcing = searchController.searchBar.text ?? ""
         
+        if (checkAllSpace(currentSearcing)) {
+            showAlert("공백으로만 이루어진 단어는 검색할 수 없습니다", "검색어가 업데이트 되지 않습니다")
+            return
+        }
+        
+        if (!NetworkMonitor.shared.isConnected) {
+            showAlert("네트워크 연결이 끊겼습니다", "목록을 불러올 수 없습니다")
+            return
+        }
+        
+        searchingWord = currentSearcing
         searchNewData()
     }
 }
