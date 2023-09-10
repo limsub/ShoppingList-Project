@@ -158,7 +158,8 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
         
         mallNameLabel.text = "[\(sender.mallName)]"
         
-        titleLabel.removeTag(sender.title)
+//        titleLabel.removeTag(sender.title)
+        titleLabel.text = sender.title
         titleLabel.makeBoldWord(sender.title, searchWord)
         
         priceLabel.makePriceFormat(sender.lprice)

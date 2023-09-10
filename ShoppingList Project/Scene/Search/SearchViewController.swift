@@ -407,7 +407,13 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
                     // (3). new task create
                     // (4). collectionView reload
                 if let item {
-                    let task = LikesTable(productId: item.productID, mallName: item.mallName, title: item.title, lprice: item.lprice, imageLink: item.image)
+                    
+                    // 주의!! 애초에 데이터를 저장할 때 <b> 태그를 빼고 저장해야 한다!!!
+                    var title = item.title
+                    title = title.replacingOccurrences(of: "<b>", with: "")
+                    title = title.replacingOccurrences(of: "</b>", with: "")
+                    
+                    let task = LikesTable(productId: item.productID, mallName: item.mallName, title: title, lprice: item.lprice, imageLink: item.image)
                     
                     let url = URL(string: item.image)
                     DispatchQueue.global().async {  // try Data : 동기
@@ -433,7 +439,14 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         let item = data[indexPath.row]
         
         // 값 전달 : LikesTable 타입(각종 정보)과 Bool 타입(좋아요 여부)로 넘겨줌
-        let task = LikesTable(productId: item.productID, mallName: item.mallName, title: item.title, lprice: item.lprice, imageLink: item.image)
+        
+        // 주의!! 애초에 데이터를 저장할 때 <b> 태그를 빼고 저장해야 한다!!!
+        // 결국, liketable 안에는 <b> 태그가 있으면 안돼!!
+        var title = item.title
+        title = title.replacingOccurrences(of: "<b>", with: "")
+        title = title.replacingOccurrences(of: "</b>", with: "")
+        
+        let task = LikesTable(productId: item.productID, mallName: item.mallName, title: title, lprice: item.lprice, imageLink: item.image)
         
         // 좋아요 여부 체크
         var heart = false
