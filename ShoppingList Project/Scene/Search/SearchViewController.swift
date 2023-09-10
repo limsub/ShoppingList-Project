@@ -517,11 +517,12 @@ extension SearchViewController: UIScrollViewDelegate {
         if ( scrollView.contentSize.height - scrollView.contentOffset.y < 700  && startNum < 91 && NetworkMonitor.shared.isConnected && goEndScroll) {
             print("pagination (scroll) 실행")
             startNum += 30
-            goEndScroll = false
+            goEndScroll = false // 네트워크 통신 때문인지 contentSize.height 다시 커지는 시점이 이 함수가 다시 실행되는 것보다 늦어서, 얘가 연속해서 계속 실행될 수 있는 문제점
             
             callShopingList(searchingWord, howSort, startNum)
             
         }
+         
 //        else if scrollView.contentSize.height - scrollView.contentOffset.y < 700  && startNum >= 91 {
 //            // 뽀너스로 끝까지 도착했을 때 얼럿도 얘가 띄워줌
 //            showAlert("모든 데이터를 불렀습니다", "더 이상 불러올 수 없습니다")

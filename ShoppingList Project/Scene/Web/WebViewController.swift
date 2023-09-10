@@ -182,8 +182,6 @@ class WebViewController: BaseViewController, WKUIDelegate {
             
             // 1). 잘 들어와서 잘 좋아요 누름
             // 2). 네트워크 끊긴 채로 들어옴 -> imageData 없음
-                // 2 - 1). 끊긴 상태 그대로 좋아요 추가 -> imageData 없는 채로 추가
-                // 2 - 2). 좋아요를 누르는 시점에 네트워크 연결이 되어있음 -> imageData 있는 채로 추가
             
             print("좋아요 목록에 추가됩니다")
             
