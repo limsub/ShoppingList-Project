@@ -8,7 +8,7 @@
 import UIKit
 import RealmSwift
 
-class LikeViewController: BaseViewController {
+final class LikeViewController: BaseViewController {
     
     /* ========== repository pattern ========== */
     let repository = LikesTableRepository()

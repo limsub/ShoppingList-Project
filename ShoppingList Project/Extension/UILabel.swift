@@ -42,8 +42,7 @@ extension UILabel {
         let fullText = self.text ?? ""
         
         let attributedString = NSMutableAttributedString(string: fullText)
-        
-        
+
         let target = searchWord
         
         var ranges: [NSRange] = []
