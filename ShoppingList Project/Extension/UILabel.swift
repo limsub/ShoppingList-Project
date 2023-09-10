@@ -38,8 +38,9 @@ extension UILabel {
     
     
     // 검색 문자열 볼드 처리
-    func makeBoldWord(_ searchWord: String) {
+    func makeBoldWord(_ fullText: String, _ searchWord: String) {
         let fullText = self.text ?? ""
+        
         let attributedString = NSMutableAttributedString(string: fullText)
         
         

@@ -140,7 +140,7 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
         mallNameLabel.text = "[\(sender.mallName)]"
         
         titleLabel.removeTag(sender.title)  // <b> 태그 지우고 title로 설정
-        titleLabel.makeBoldWord(searchWord) // 검색한 단어 bold 폰트로 변경
+        titleLabel.makeBoldWord(sender.title, searchWord) // 검색한 단어 bold 폰트로 변경
         
         priceLabel.makePriceFormat(sender.lprice)
         
@@ -159,7 +159,7 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
         mallNameLabel.text = "[\(sender.mallName)]"
         
         titleLabel.removeTag(sender.title)
-        titleLabel.makeBoldWord(searchWord)
+        titleLabel.makeBoldWord(sender.title, searchWord)
         
         priceLabel.makePriceFormat(sender.lprice)
         
