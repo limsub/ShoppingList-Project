@@ -37,6 +37,35 @@ class LikeViewController: BaseViewController {
         return view
     }()
     
+    let noDataSearched = {
+        let view = UIView()
+        
+        view.backgroundColor = .clear
+        
+        let label = UILabel()
+        label.text = "데이터가 없습니다"
+        label.textColor = .lightGray
+        label.numberOfLines = 2
+        label.textAlignment = .center
+        
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "xmark")
+        imageView.tintColor = .lightGray
+        
+        view.addSubview(imageView)
+        view.addSubview(label)
+        imageView.snp.makeConstraints { make in
+            make.center.equalTo(view)
+            make.size.equalTo(100)
+        }
+        label.snp.makeConstraints { make in
+            make.top.equalTo(imageView.snp.bottom).offset(10)
+            make.centerX.equalTo(view)
+        }
+        
+        return view
+    }()
+    
     
     
     /* ========== viewDidLoad ========== */
@@ -83,6 +112,7 @@ class LikeViewController: BaseViewController {
         super.setConfigure()
         
         view.addSubview(collectionView)
+        view.addSubview(noDataSearched)
     }
     
     override func setConstraints() {
@@ -90,6 +120,11 @@ class LikeViewController: BaseViewController {
         
         collectionView.snp.makeConstraints { make in
             make.edges.equalTo(view.safeAreaLayoutGuide)
+        }
+        
+        noDataSearched.snp.makeConstraints { make in
+            make.center.equalTo(view.safeAreaLayoutGuide)
+            make.size.equalTo(200)
         }
     }
 }
@@ -116,6 +151,12 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let tasks = tasks else { return 0 }
+        
+        if (tasks.count == 0) {
+            noDataSearched.isHidden = false
+        } else {
+            noDataSearched.isHidden = true
+        }
         return tasks.count
     }
     

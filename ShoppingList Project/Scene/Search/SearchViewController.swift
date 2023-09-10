@@ -72,6 +72,35 @@ class SearchViewController: BaseViewController {
         return view
     }()
     
+    let noDataSearched = {
+        let view = UIView()
+        
+        view.backgroundColor = .clear
+        
+        let label = UILabel()
+        label.text = "검색된 데이터가 없습니다"
+        label.textColor = .lightGray
+        label.numberOfLines = 2
+        label.textAlignment = .center
+        
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "xmark")
+        imageView.tintColor = .lightGray
+        
+        view.addSubview(imageView)
+        view.addSubview(label)
+        imageView.snp.makeConstraints { make in
+            make.center.equalTo(view)
+            make.size.equalTo(100)
+        }
+        label.snp.makeConstraints { make in
+            make.top.equalTo(imageView.snp.bottom).offset(10)
+            make.centerX.equalTo(view)
+        }
+        
+        return view
+    }()
+    
     
     
     /* === 정렬 타입에 따라 버튼 디자인 변경 === */
@@ -263,6 +292,7 @@ class SearchViewController: BaseViewController {
             view.addSubview(item)
         }
         view.addSubview(collectionView)
+        view.addSubview(noDataSearched)
     }
     
     override func setConstraints() {
@@ -289,6 +319,11 @@ class SearchViewController: BaseViewController {
             make.top.equalTo(accuracySortButton.snp.bottom).offset(10)
             make.bottom.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
         }
+        
+        noDataSearched.snp.makeConstraints { make in
+            make.size.equalTo(200)
+            make.center.equalTo(view.safeAreaLayoutGuide)
+        }
     }
 }
 
@@ -314,6 +349,12 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
 
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if (data.count == 0) {
+            noDataSearched.isHidden = false
+        } else {
+            noDataSearched.isHidden = true
+        }
+        
         return data.count
     }
     
