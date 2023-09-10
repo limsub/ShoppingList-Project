@@ -10,10 +10,7 @@ import RealmSwift
 
 class LikesTable: Object {
 
-    
-    
     @Persisted(primaryKey: true) var _id: ObjectId
-    // 옵셔널은 아닌데, 빈 문자열일 순 있다
     @Persisted var productId: String
     @Persisted var mallName: String
     @Persisted var title: String
@@ -21,8 +18,7 @@ class LikesTable: Object {
     @Persisted var imageLink: String
     @Persisted var imageData: Data?
     
-    // 등록순으로 좋아요 창에 띄워주기 위함.
-    @Persisted var time: Date
+    @Persisted var time: Date   // 좋아요 목록 창에 등록순으로 띄워주기 위함
     
     convenience init(productId: String, mallName: String, title: String, lprice: String, imageLink: String, imageData: Data? = nil) {
         self.init()

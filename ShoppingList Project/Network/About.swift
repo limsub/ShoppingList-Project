@@ -7,15 +7,12 @@
 
 import Foundation
 
-
-// MARK: - Shopping
 struct Shopping: Codable {
     let lastBuildDate: String?
     let total, start, display: Int
     let items: [Item]
 }
 
-// MARK: - Item
 struct Item: Codable {
     let title: String
     let link: String

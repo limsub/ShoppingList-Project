@@ -15,10 +15,8 @@ protocol LikesTableRepositoryType: AnyObject {
     
     // Read
     func fetch() -> Results<LikesTable>
-    // 검색해서 읽어오는 걸 어디서 구현할까
-    
-    // Update
-    func updateItem(_ value: [String: Any])
+    func fetch(_ productId: String) -> Results<LikesTable>
+    func search(_ title: String) -> Results<LikesTable>
     
     // Delete
     func deleteItem(_ item: LikesTable)
@@ -56,18 +54,6 @@ class LikesTableRepository: LikesTableRepositoryType {
             $0.title.contains(title, options: .caseInsensitive)
         }
         return data
-    }
-    
-    
-    // Update
-    func updateItem(_ value: [String : Any]) {
-        do {
-            try realm.write {
-                realm.create(LikesTable.self, value: value, update: .modified)
-            }
-        } catch {
-            print("Update Error : ", error)
-        }
     }
     
     

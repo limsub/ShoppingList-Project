@@ -71,7 +71,4 @@ class NetworkMonitor {
         
         monitor.cancel()
     }
-    
-    
-    
 }

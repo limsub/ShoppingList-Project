@@ -8,8 +8,13 @@
 import UIKit
 import Kingfisher
 
+protocol ShoppingListCell {
+    func initialDesignCell(_ sender: Item, _ searchWord: String)    // Item 타입이 들어올 때
+    func initialDesignCellForLikesTable(_ sender: LikesTable, _ searchWord: String)  // LikesTable 타입이 들어올 때
+}
 
-class ShoppingCollectionViewCell: BaseCollectionViewCell {
+
+class ShoppingCollectionViewCell: BaseCollectionViewCell, ShoppingListCell {
     
     /* ========== 인스턴스 생성 ========== */
     let posterImageView = {
@@ -109,19 +114,10 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
     
     /* ========== 좋아요 버튼 클릭 함수 ========== */
     @objc
-    func heartButtonClicked() {
+    private func heartButtonClicked() {
         if let closure = heartCallBackMethod {
             closure()
         }
-    }
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-//        posterImageView.image = UIImage(systemName: "photo")
-    }
-    
-    override func prepareForReuse() {
-//        posterImageView.image = nil
     }
     
     /* ========== 셀 디자인 함수 ========== */
@@ -132,18 +128,16 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
         posterImageView.kf.setImage(with: url)  // 여기가 네트워크 통신
         posterImageView.contentMode = .scaleAspectFill
         
+        // 기본 이미지로 지정
         if !NetworkMonitor.shared.isConnected && (posterImageView.image == UIImage(systemName: "photo") || posterImageView.image == nil)  {   // 이미 다운이 완료된 이미지는 살려주기 위함
             posterImageView.image = UIImage(systemName: "photo")
             posterImageView.contentMode = .scaleAspectFit
         }
         
         mallNameLabel.text = "[\(sender.mallName)]"
-        
         titleLabel.removeTag(sender.title)  // <b> 태그 지우고 title로 설정
         titleLabel.makeBoldWord(sender.title, searchWord) // 검색한 단어 bold 폰트로 변경
-        
         priceLabel.makePriceFormat(sender.lprice)
-        
         heartButton.setImage(UIImage(systemName: "heart"), for: .normal)
     }
     
@@ -157,16 +151,12 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
         }
         
         mallNameLabel.text = "[\(sender.mallName)]"
-        
-//        titleLabel.removeTag(sender.title)
         titleLabel.text = sender.title
         titleLabel.makeBoldWord(sender.title, searchWord)
-        
         priceLabel.makePriceFormat(sender.lprice)
         
         heartButton.setImage(UIImage(systemName: "heart.fill"), for: .normal)
     }
-    
     
     // 좋아요 버튼 체크
     func checkHeartButton(_ sender: Bool) {
@@ -175,8 +165,6 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
             for: .normal
         )
     }
-    
-
     
     
     /* ========== set Configure / Constraints ========== */
@@ -201,22 +189,19 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell {
         }
         
         mallNameLabel.snp.makeConstraints { make in
-            make.top.equalTo(posterImageView.snp.bottom).offset(5)  // 수치 조절 필요
+            make.top.equalTo(posterImageView.snp.bottom).offset(5)
             make.horizontalEdges.equalTo(contentView).inset(5)
-            // 일단 레이블이라 높이 생략. 나중에 잡아주기
         }
         
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(mallNameLabel.snp.bottom).offset(2)
             make.horizontalEdges.equalTo(contentView).inset(5)
-            // 일단 레이블이라 높이 생략. 나중에 잡아주기
         }
         
         priceLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(2)
             make.horizontalEdges.equalTo(contentView).inset(5)
             make.height.equalTo(20)
-            // 일단 레이블이라 높이 생략. 나중에 잡아주기
         }
         
         heartButton.snp.makeConstraints { make in

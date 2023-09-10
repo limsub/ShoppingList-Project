@@ -8,14 +8,7 @@
 import UIKit
 import WebKit
 
-// product를 다이렉트로 설정/해제하면 안됨.
-// 가지고 있는 데이터로 새로 task를 만들고, 그걸 기반으로 추가 / 삭제 해야함
-// 그래서 값 전달로 받은 product는 딱 정보 빼오는 용도로만 쓴다고 생각하자
-
-
-class WebViewController: BaseViewController, WKUIDelegate {
-    
-    var previousVC: UIViewController?
+final class WebViewController: BaseViewController, WKUIDelegate {
     
     /* ===== 인스턴스 ===== */
     var webView = WKWebView()
@@ -74,6 +67,7 @@ class WebViewController: BaseViewController, WKUIDelegate {
     
     /* ===== 값전달 인스턴스 ===== */
     var product: LikesTable?
+    var previousVC: UIViewController?  // 이전 뷰컨트롤러 저장 (탭바 클릭 시 확인용)
     var likeOrNot: Bool = false
     
     
@@ -85,17 +79,9 @@ class WebViewController: BaseViewController, WKUIDelegate {
         
         webView.navigationDelegate = self
         
+        // newProduct 인스턴스 생성
         guard let product = product else { return }
-        
-        // new product 생성 (현재 화면에 떠있는 제품)
         newProduct = LikesTable(productId: product.productId, mallName: product.mallName, title: product.title, lprice: product.lprice, imageLink: product.imageLink, imageData: product.imageData)
-        print(newProduct)
-        
-        // + image Data 저장 -> 이미 데이터 처리가 되어있어서 바로 가능
-        
-        // likeOrNot을 값전달로 받긴 했지만, 그건 초기값이고
-        // 실질적인 값은 realm을 통해서 찾아야 한다
-        // productId가 있으면 likeOrNot = true
         
         
         loadWebView()
@@ -103,7 +89,6 @@ class WebViewController: BaseViewController, WKUIDelegate {
         
         /* === 네비게이션 커스텀 === */
         title = setTitleText(product.title)
-        
         heartButton = UIBarButtonItem(
             image: UIImage(systemName: (likeOrNot) ? "heart.fill" : "heart"),
             style: .plain,
@@ -113,64 +98,40 @@ class WebViewController: BaseViewController, WKUIDelegate {
         navigationItem.rightBarButtonItem = heartButton
     }
     
+    
+    /* ===== viewWillAppear ===== */
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+        // 좋아요 여부 확인
         guard let newProduct = newProduct else { return }
-        
         if repository.fetch(newProduct.productId).isEmpty {
             likeOrNot = false
         } else {
             likeOrNot = true
         }
         
+        // 좋아요 버튼 업데이트
         guard let heartButton = heartButton else { return }
         heartButton.image = UIImage(systemName: (likeOrNot) ? "heart.fill" : "heart")
         
+        
         tabBarController?.delegate = self
-        
-        
-    }
-    
-    func setTitleText(_ sender: String) -> String {
-        
-        var ans = sender
-        
-        // <b> 태그 제거
-        ans = ans.replacingOccurrences(of: "<b>", with: "")
-        ans = ans.replacingOccurrences(of: "</b>", with: "")
-        
-        // count 10 이상이면 잘라주기
-        if ans.count > 10 {
-            let index = ans.index(ans.startIndex, offsetBy: 10)
-            ans = String(ans.prefix(upTo: index))
-            ans = ans + "..."
-        }
-        
-        return ans
     }
     
     @objc
-    func heartButtonClicked() {
-        
-        print("좋아요 버튼이 눌렸습니다")
-        
+    private func heartButtonClicked() {
         
         // 좋아요 목록에서 해제
         if likeOrNot {
-            
-            print("좋아요 목록에서 해제됩니다")
-            
             // 1. 찾기
             guard let newProduct = newProduct else { return }
             guard let task = repository.fetch(newProduct.productId).first else { return }
-            print("저장된 데이터를 찾았습니다 :")
-            print(task)
 
             // 2. 데이터 제거
             repository.deleteItem(task)
             
-            // 3. 이미지 변경
+            // 3. 좋아요 버튼 업데이트
             heartButton?.image = UIImage(systemName: "heart")
             
             // 4. 인스턴스 데이터 변경
@@ -180,10 +141,8 @@ class WebViewController: BaseViewController, WKUIDelegate {
         // 좋아요 목록에 추가
         else {
             
-            // 1). 잘 들어와서 잘 좋아요 누름
-            // 2). 네트워크 끊긴 채로 들어옴 -> imageData 없음
-            
-            print("좋아요 목록에 추가됩니다")
+            // 1). 잘 들어옴 -> 잘 추가
+            // 2). 네트워크 끊긴 상태에서 들어옴 -> imageData 저장 불가능
             
             // 1. 데이터 생성 (다른 PK를 만들어주기 위함)
             guard let newProduct = newProduct else { return }
@@ -197,7 +156,7 @@ class WebViewController: BaseViewController, WKUIDelegate {
             // 2. 데이터 추가
             repository.createItem(addProduct)
             
-            // 3. 이미지 변경
+            // 3. 좋아요 버튼 업데이트
             heartButton?.image = UIImage(systemName: "heart.fill")
             
             // 4. 인스턴스 데이터 변경
@@ -258,13 +217,14 @@ class WebViewController: BaseViewController, WKUIDelegate {
 }
 
 extension WebViewController: WKNavigationDelegate {
-    
+    // 로드 실패
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         webView.isHidden = true
         disConnectedView.isHidden = false
         print("로드 실패")
     }
     
+    // 로드 성공
     func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) {
         webView.isHidden = false
         disConnectedView.isHidden = true
@@ -275,10 +235,10 @@ extension WebViewController: WKNavigationDelegate {
 extension WebViewController {
     
     /* === webView 로딩 === */
-    func loadWebView() {
+    private func loadWebView() {
         
-        guard let product = self.product else { return }
-        guard let url = URL(string: "https://msearch.shopping.naver.com/product/\(product.productId)") else { return }
+        guard let newProduct = self.newProduct else { return }
+        guard let url = URL(string: "https://msearch.shopping.naver.com/product/\(newProduct .productId)") else { return }
         let request = URLRequest(url: url)
         self.webView.load(request)
         
@@ -287,7 +247,7 @@ extension WebViewController {
     
     // 새로고침
     @objc
-    func reloadButtonClicked() {
+    private func reloadButtonClicked() {
         // 로드 실패한 상황이었으면 웹뷰 다시 로드한다
         if (webView.isHidden) {
             loadWebView()
@@ -297,7 +257,7 @@ extension WebViewController {
     
     // 뒤로가기
     @objc
-    func backwardButtonClicked() {
+    private func backwardButtonClicked() {
         if webView.canGoBack {
             webView.goBack()
         }
@@ -305,7 +265,7 @@ extension WebViewController {
     
     // 앞으로 가기
     @objc
-    func forwardButtonClicked() {
+    private func forwardButtonClicked() {
         if webView.canGoForward {
             webView.goForward()
         }

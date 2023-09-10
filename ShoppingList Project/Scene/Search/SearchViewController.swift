@@ -7,32 +7,20 @@
 
 import UIKit
 
-// 검색 창
-// 인스턴스
-    // 서치바
-    // 버튼 4개
-    // 컬렉션뷰
+final class SearchViewController: BaseViewController {
 
-
-// 일단 지금 생각
-    // 네비게이션 아이템에 서치바 포함
-    // 버튼 4개랑 컬렉션뷰 따로
-
-
-
-class SearchViewController: BaseViewController {
-    
-    var goEndScroll = false
-    
     /* ========== 컬렉션뷰 데이터 ========== */
     var data: [Item] = []
     var startNum: Int = 1   // pagination (1 -> 31 -> 61 -> 91 -> done)
-    var totalNum: Int = 0   // pagination 시 예외처리용 (totalNum < indexPath.row -> 페이지 추가 x. 애초에 넘어가지도 않겠네)
+    var totalNum: Int = 0   // pagination 시 예외처리용
+    var goEndScroll = false // pagination 예외처리용
     var howSort = SortCase.accuracy    // 정렬 기준. 디폴트 : 정확도
     var searchingWord: String = ""          // 현재 로드된 데이터들의 검색 단어 -> 검색 시에만 업데이트.
     
+    
     /* ========== repository pattern ========== */
     let repository = LikesTableRepository()
+    
     
     /* ========== 인스턴스 생성 ========== */
     let searchController = UISearchController(searchResultsController: nil)
@@ -102,10 +90,8 @@ class SearchViewController: BaseViewController {
     }()
     
     
-    
     /* === 정렬 타입에 따라 버튼 디자인 변경 === */
-    func changeSortButtonDesign() {
-        
+    private func changeSortButtonDesign() {
         let buttons = [accuracySortButton, dateSortButton, highPriceSortButton, lowPriceSortButton]
         for (index, button) in buttons.enumerated() {
             if let title = button.titleLabel?.text, title == howSort.title {
@@ -125,14 +111,7 @@ class SearchViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tabBarController?.delegate = self
-        
-        repository.printURL()
-        
         view.backgroundColor = .systemBackground
-        
-
-        
         
         /* === 네비게이션 아이템 및 서치바 커스텀 === */
         title = "쇼핑 검색"
@@ -173,17 +152,15 @@ class SearchViewController: BaseViewController {
     
     
     /* ===== 서버 통신 함수 ===== */
-    func callShopingList(_ query: String, _ sortType: SortCase, _ start: Int) {
+    private func callShopingList(_ query: String, _ sortType: SortCase, _ start: Int) {
         
         // case 1 (pagination) : 기존 배열에 새로운 데이터 append
         // case 2 (reload) : 기존 배열 초기화 후 새로운 데이터 append
         
         if (query == "") {
-            // 빈 문자열
-            // 서치바 상에서 검색이 불가능하기 때문에 들어올 수 없음
+            // 검색 x
         } else {
             ShoppingAPIManager.shared.callShoppingList(query, sortType, start) { value in
-//                print(value)
                 
                 // case 2
                 if (self.startNum == 1) {
@@ -198,20 +175,18 @@ class SearchViewController: BaseViewController {
             } showAlertWhenNetworkDisconnected: {
                 self.showAlert("네트워크 연결이 끊겼습니다", "목록을 불러올 수 없습니다")
             }
-            
-            
         }
     }
     
     /* ===== 데이터 초기화 함수= ===== */
-    func initData() {
+    private func initData() {
         startNum = 1
     }
     
     
     /* ===== 현재 서치바 텍스트 기반으로 검색 후 테이블 업데이트 ===== */
     // (1). return 키    (2). 정렬 버튼 4개
-    func searchNewData() {
+    private func searchNewData() {
         initData()
         
         let query = searchingWord
@@ -220,19 +195,9 @@ class SearchViewController: BaseViewController {
     }
     
     
-    func checkAllSpace(_ sender: String) -> Bool {
-        let set = CharacterSet.whitespaces
-        
-        let str = sender.trimmingCharacters(in: set)
-        
-        return str.isEmpty
-    }
-    
-    
-    
     /* ===== 버튼 addTarget 액션 ===== */
     @objc
-    func accuracySortButtonClicked() {
+    private func accuracySortButtonClicked() {
         searchController.searchBar.resignFirstResponder()   // 키보드 내림
         
         if NetworkMonitor.shared.isConnected {
@@ -244,7 +209,7 @@ class SearchViewController: BaseViewController {
         }
     }
     @objc
-    func dateSortButtonClicked() {
+    private func dateSortButtonClicked() {
         searchController.searchBar.resignFirstResponder()
         
         if NetworkMonitor.shared.isConnected {
@@ -256,7 +221,7 @@ class SearchViewController: BaseViewController {
         }
     }
     @objc
-    func highPriceSortButtonClicked() {
+    private func highPriceSortButtonClicked() {
         searchController.searchBar.resignFirstResponder()
         
         if NetworkMonitor.shared.isConnected {
@@ -268,7 +233,7 @@ class SearchViewController: BaseViewController {
         }
     }
     @objc
-    func lowPriceSortButtonClicked() {
+    private func lowPriceSortButtonClicked() {
         searchController.searchBar.resignFirstResponder()
         
         if NetworkMonitor.shared.isConnected {
@@ -279,8 +244,6 @@ class SearchViewController: BaseViewController {
             showAlert("네트워크 연결이 끊겼습니다", "해당 기능을 사용할 수 없습니다")
         }
     }
-    
-    
     
     
     
@@ -331,23 +294,6 @@ class SearchViewController: BaseViewController {
 /* ========== collectionView extension ========== */
 extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
-    
-    // collectionViewLayoutFlow
-    private func collectionViewLayout() -> UICollectionViewFlowLayout {
-        let layout = UICollectionViewFlowLayout()
-        
-        let spacing: CGFloat = 14
-        
-        layout.minimumLineSpacing = spacing
-        layout.minimumInteritemSpacing = spacing
-        let size = UIScreen.main.bounds.width - spacing * 3
-        layout.itemSize = CGSize(width: size / 2, height: size / 2 + 80)
-        layout.sectionInset = UIEdgeInsets(top: 0, left: spacing, bottom: 0, right: spacing)
-        
-        return layout
-    }
-
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if (data.count == 0) {
             noDataSearched.isHidden = false
@@ -362,10 +308,10 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShoppingCollectionViewCell.reuseIdentifier, for: indexPath) as? ShoppingCollectionViewCell else { return UICollectionViewCell() }
 
-        
+        // 기본 디자인
         cell.initialDesignCell(data[indexPath.row], searchingWord)
         
-        /* == 좋아요 여부 확인 후 버튼 디자인 === */
+        // 좋아요 버튼 디자인
         var heart = false
         if !(repository.fetch(data[indexPath.row].productID).isEmpty) {
             heart = true
@@ -382,10 +328,12 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
             // heart
             
             // 1.5. 좋아요 버튼 이미지 토글
-            cell.checkHeartButton(!heart)
+//            cell.checkHeartButton(!heart)     // 연속으로 좋아요 버튼을 눌렀을 때 중복으로 데이터가 저장되는 것 방지
             
             // 2. 좋아요 목록에서 해제 or 추가
             if (heart) {
+                cell.checkHeartButton(!heart)   // 위치 이동
+                
                 // 2 - 1. 해제
                     // (1). 좋아요 리스트에서 검색
                     // (2). 검색 결과 delete
@@ -396,6 +344,10 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 }
             }
             else {
+                if (cell.heartButton.image(for: .normal) == UIImage(systemName: "heart.fill") ) { return }
+                
+                cell.checkHeartButton(!heart)   // 위치 이동
+                
                 // 네트워크 통신이 끊겼을 경우 -> 이미지를 제외한 값만 디비에 저장 가능
                 if (!NetworkMonitor.shared.isConnected) {
                     self?.showAlert("네트워크 연결이 끊겼습니다", "이미지를 제외한 데이터만 저장됩니다")
@@ -471,11 +423,6 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 self.navigationController?.pushViewController(vc, animated: true)
             }
         }
-        
-        
-        
-        
-
     }
 }
 
@@ -514,9 +461,6 @@ extension SearchViewController: UICollectionViewDataSourcePrefetching {
     // 위로 살짝 올렸다가 내리면, 다시 prefetchItem이 실행되면서 pagination이 실행된다
     
     // 해결 방안 -> scroll height를 계산한다
-    
-    // 위에 방법이 기본이고, 밑에 방법은 딱 네트워크 끊겼다가 다시 연결되었을 때 용
-    
 }
 
 extension SearchViewController: UIScrollViewDelegate {
@@ -535,15 +479,7 @@ extension SearchViewController: UIScrollViewDelegate {
             callShopingList(searchingWord, howSort, startNum)
             
         }
-         
-//        else if scrollView.contentSize.height - scrollView.contentOffset.y < 700  && startNum >= 91 {
-//            // 뽀너스로 끝까지 도착했을 때 얼럿도 얘가 띄워줌
-//            showAlert("모든 데이터를 불렀습니다", "더 이상 불러올 수 없습니다")
-//            goEndScroll = false
-//        }
     }
-    
-    
 }
 
 

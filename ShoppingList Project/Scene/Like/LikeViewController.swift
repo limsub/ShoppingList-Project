@@ -8,11 +8,6 @@
 import UIKit
 import RealmSwift
 
-// 좋아요 창
-// 인스턴스
-    // 서치바
-    // 컬렉션뷰
-
 class LikeViewController: BaseViewController {
     
     /* ========== repository pattern ========== */
@@ -66,14 +61,10 @@ class LikeViewController: BaseViewController {
         return view
     }()
     
-    
-    
+
     /* ========== viewDidLoad ========== */
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-
         
         // 데이터 불러오기
         tasks = repository.fetch()
@@ -133,22 +124,6 @@ class LikeViewController: BaseViewController {
 /* ========== collectionView extension ========== */
 extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
-    // collectionViewLayoutFlow
-    private func collectionViewLayout() -> UICollectionViewFlowLayout {
-        let layout = UICollectionViewFlowLayout()
-        
-        let spacing: CGFloat = 14
-        
-        layout.minimumLineSpacing = spacing
-        layout.minimumInteritemSpacing = spacing
-        let size = UIScreen.main.bounds.width - spacing * 3
-        layout.itemSize = CGSize(width: size / 2, height: size / 2 + 80)
-        layout.sectionInset = UIEdgeInsets(top: 0, left: spacing, bottom: 0, right: spacing)
-        
-        return layout
-    }
-
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let tasks = tasks else { return 0 }
         
@@ -186,16 +161,6 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         return cell;
     }
     
-    func checkAllSpace(_ sender: String) -> Bool {
-        let set = CharacterSet.whitespaces
-        
-        let str = sender.trimmingCharacters(in: set)
-        
-        return str.isEmpty
-    }
-    
-    
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         searchController.searchBar.resignFirstResponder()
@@ -215,7 +180,7 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
 extension LikeViewController: UISearchBarDelegate {
     
     /* ===== 현재 서치바의 텍스트 기반으로 새롭게 검색 후 테이블 업데이트까지 =====*/
-    func searchNewData() {
+    private func searchNewData() {
         guard let txt = searchController.searchBar.text else { return }
         
         tasks = (txt.count == 0) ? repository.fetch() : repository.search(txt)

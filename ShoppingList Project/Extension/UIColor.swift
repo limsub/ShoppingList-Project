@@ -19,6 +19,4 @@ extension UIColor {
             }
         }
     }
-    
-
 }
