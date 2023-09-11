@@ -103,6 +103,7 @@ final class WebViewController: BaseViewController, WKUIDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+
         // 좋아요 여부 확인
         guard let newProduct = newProduct else { return }
         if repository.fetch(newProduct.productId).isEmpty {

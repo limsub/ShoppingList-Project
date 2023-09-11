@@ -407,22 +407,29 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
             heart = true
         }
         
+        let vc = WebViewController()
+        vc.previousVC = self
+        vc.product = task
+        vc.likeOrNot = heart
+        self.navigationController?.pushViewController(vc, animated: true)
+        
         // + 이미지 데이터 추가
         let url = URL(string: item.image)
         DispatchQueue.global().async {
             if let url, let data = try? Data(contentsOf: url) {
                 task.imageData = data
+                vc.newProduct?.imageData = data // 실질적으로 사용하는 데이터는 newProduct이기 때문에 예외적으로 이미지 데이터만 직접 전달한다
             }
             
             // 데이터 추가가 완료된 이후, 화면 전환
             // 화면 전환
-            DispatchQueue.main.async {
-                let vc = WebViewController()
-                vc.previousVC = self
-                vc.product = task
-                vc.likeOrNot = heart
-                self.navigationController?.pushViewController(vc, animated: true)
-            }
+//            DispatchQueue.main.async {
+//                let vc = WebViewController()
+//                vc.previousVC = self
+//                vc.product = task
+//                vc.likeOrNot = heart
+//                self.navigationController?.pushViewController(vc, animated: true)
+//            }
         }
     }
 }
