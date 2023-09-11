@@ -120,6 +120,12 @@ class ShoppingCollectionViewCell: BaseCollectionViewCell, ShoppingListCell {
         }
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        titleLabel.font = .systemFont(ofSize: 13)
+    }
+    
     /* ========== 셀 디자인 함수 ========== */
     // 초기 디자인
     func initialDesignCell(_ sender: Item, _ searchWord: String) {
