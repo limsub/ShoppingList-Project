@@ -169,6 +169,7 @@ final class SearchViewController: BaseViewController {
                 }
                 
                 self.totalNum = value.total
+                print(self.totalNum)
                 self.data.append(contentsOf: value.items)   // 새로운 데이터 append
                 
                 self.collectionView.reloadData()
@@ -438,7 +439,7 @@ extension SearchViewController: UICollectionViewDataSourcePrefetching {
             // (1). indexPath.row가 현재 로드한 거의 모든 데이터까지 왔을 때
             // (2). startNum 쿼리는 최대 100까지만 가능하기 때문에 maximum 91
             // (3). (거의 무조건이지만) 혹시 현재 인덱스가 검색 가능한 데이터의 총량보다 적을 때
-            if (indexPath.row == data.count - 1) && (startNum < 991) && (indexPath.row < totalNum ) {
+            if (indexPath.row == data.count - 1) && (startNum < 991) && (indexPath.row < totalNum ) && (startNum < totalNum - 30) {
                 if (NetworkMonitor.shared.isConnected) {
                     // startNum : 데이터 시작 위치. 30씩 올려준다
                     startNum += 30;
@@ -471,7 +472,7 @@ extension SearchViewController: UIScrollViewDelegate {
     // 3. 네트워크 연결이 되어있는가
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         print(scrollView.contentSize.height, scrollView.contentOffset.y, startNum)
-        if ( scrollView.contentSize.height - scrollView.contentOffset.y < 700  && startNum < 991 && NetworkMonitor.shared.isConnected && goEndScroll) {
+        if ( scrollView.contentSize.height - scrollView.contentOffset.y < 700  && startNum < 991 && NetworkMonitor.shared.isConnected && goEndScroll) && (startNum < totalNum - 30) {
             print("pagination (scroll) 실행")
             startNum += 30
             goEndScroll = false // 네트워크 통신 때문인지 contentSize.height 다시 커지는 시점이 이 함수가 다시 실행되는 것보다 늦어서, 얘가 연속해서 계속 실행될 수 있는 문제점
