@@ -82,7 +82,7 @@ final class WebViewController: BaseViewController, WKUIDelegate {
         // newProduct 인스턴스 생성
         guard let product = product else { return }
         newProduct = LikesTable(productId: product.productId, mallName: product.mallName, title: product.title, lprice: product.lprice, imageLink: product.imageLink, imageData: product.imageData)
-        
+        // 이미지 데이터는 일정 시간 후에 받아오기 때문에 여기서는 아직 nil
         
         loadWebView()
         

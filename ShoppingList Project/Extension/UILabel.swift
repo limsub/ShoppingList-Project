@@ -79,7 +79,7 @@ extension UILabel {
     }
     
 
-    // b 태그 제거 함수
+    // b 태그 제거 후 타이틀로 설정
     func removeTag(_ sender: String) {
         
         var ans = sender.replacingOccurrences(of: "<b>", with: "")

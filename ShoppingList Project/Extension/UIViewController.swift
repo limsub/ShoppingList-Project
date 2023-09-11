@@ -19,7 +19,8 @@ extension UIViewController {
         present(alert, animated: true)
     }
     
-    // 네비게이션 타이틀
+    
+    // 상세 화면의 네비게이션 타이틀
     func setTitleText(_ sender: String) -> String {
         
         var ans = sender
@@ -38,6 +39,7 @@ extension UIViewController {
         return ans
     }
     
+    
     // 공백으로만 이루어진 문자열인지 확인
     func checkAllSpace(_ sender: String) -> Bool {
         let set = CharacterSet.whitespaces
@@ -46,6 +48,7 @@ extension UIViewController {
         
         return str.isEmpty
     }
+    
     
     // 셀 레이아웃
     func collectionViewLayout() -> UICollectionViewFlowLayout {

@@ -122,9 +122,9 @@ final class SearchViewController: BaseViewController {
         searchController.hidesNavigationBarDuringPresentation = false   // 네비게이션 타이틀 계속 띄워주기
         searchController.searchBar.delegate = self  // 프로토콜 연결
         searchController.searchBar.searchTextField.backgroundColor = .systemGray6   // 텍스트필드 배경생 지정
-        searchController.searchBar.tintColor = .labelColor   // 텍스트필드 커서, 취소 글자 색상 -> 다크모드 대응 필요
+        searchController.searchBar.tintColor = .labelColor   // 텍스트필드 커서, 취소 글자 색상
         searchController.searchBar.setValue("취소", forKey: "cancelButtonText")   // 한글로 "취소" 설정
-        searchController.searchBar.searchTextField.attributedPlaceholder = NSAttributedString(string: "검색어를 입력하세요.", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])  // 플레이스홀더 커스텀
+        searchController.searchBar.searchTextField.attributedPlaceholder = NSAttributedString(string: "검색어를 입력하세요", attributes: [NSAttributedString.Key.foregroundColor : UIColor.lightGray])  // 플레이스홀더 커스텀
         
         navigationController?.navigationBar.backgroundColor = .systemBackground // 네비게이션 바 배경색
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.labelColor]   // 타이틀 색상
