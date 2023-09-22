@@ -22,7 +22,7 @@ final class LikeViewController: BaseViewController {
         
         view.backgroundColor = .systemBackground
         
-        view.register(ShoppingCollectionViewCell.self, forCellWithReuseIdentifier: ShoppingCollectionViewCell.reuseIdentifier)
+        view.register(ShoppingCollectionViewCell.self, forCellWithReuseIdentifier: ShoppingCollectionViewCell.description())
         
         view.dataSource = self
         view.delegate = self
@@ -137,7 +137,7 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShoppingCollectionViewCell.reuseIdentifier, for: indexPath) as? ShoppingCollectionViewCell else { return UICollectionViewCell() }
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShoppingCollectionViewCell.description(), for: indexPath) as? ShoppingCollectionViewCell else { return UICollectionViewCell() }
         
         guard let tasks = tasks else { return cell }
         

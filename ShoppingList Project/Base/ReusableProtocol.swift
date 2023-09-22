@@ -14,9 +14,8 @@ protocol ReusableViewProtocol: AnyObject {
 
 extension UICollectionViewCell: ReusableViewProtocol {
     static var reuseIdentifier: String {
-        return description()
-//        return String(describing: self)
+        return String(describing: self)
     }
 }
 
-
+// 애초에 reuseIdentifier를 사용하지 않고, description() 메서드를 이용해도 되겠다
