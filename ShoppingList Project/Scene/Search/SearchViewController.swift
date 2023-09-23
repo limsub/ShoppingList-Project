@@ -113,8 +113,16 @@ final class SearchViewController: BaseViewController {
     /* ========== viewDidLoad ========== */
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .systemBackground
         
-        /* ===== MVVM 적용 ===== */
+        binds()
+        customNavigation()
+        sortButtonCustom()
+    }
+    
+    /* ========== viewDidLoad에 들어가는 애들 ========== */
+    /* ===== MVVM 적용 ===== */
+    func binds() {
         viewModel.data.bind { _ in
             self.collectionView.reloadData()
         }
@@ -128,10 +136,11 @@ final class SearchViewController: BaseViewController {
         viewModel.howSort.bind { value in
             self.changeSortButtonDesign(value)
         }
-        
-        view.backgroundColor = .systemBackground
-        
-        /* === 네비게이션 아이템 및 서치바 커스텀 === */
+
+    }
+    
+    /* === 네비게이션 아이템 및 서치바 커스텀 === */
+    func customNavigation() {
         title = "쇼핑 검색"
         
         navigationItem.searchController = searchController              // 서치 컨트롤러 등록
@@ -147,16 +156,18 @@ final class SearchViewController: BaseViewController {
         navigationController?.navigationBar.backgroundColor = .systemBackground // 네비게이션 바 배경색
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.labelColor]   // 타이틀 색상
         navigationController?.navigationBar.tintColor = .labelColor
+    }
+    
+    /* === 정렬 버튼 디자인 및 addTarget === */
+    func sortButtonCustom() {
         
-        
-        /* === 정렬 버튼 디자인 및 addTarget === */
-        accuracySortButton.addTarget(self, action: #selector(accuracySortButtonClicked), for: .touchUpInside)
-        dateSortButton.addTarget(self, action: #selector(dateSortButtonClicked), for: .touchUpInside)
-        highPriceSortButton.addTarget(self, action: #selector(highPriceSortButtonClicked), for: .touchUpInside)
-        lowPriceSortButton.addTarget(self, action: #selector(lowPriceSortButtonClicked), for: .touchUpInside)
+        [accuracySortButton, dateSortButton, highPriceSortButton, lowPriceSortButton].forEach { button in
+            button.addTarget(self, action: #selector(sortButtonClicked), for: .touchUpInside)
+        }
         
         changeSortButtonDesign(viewModel.howSort.value)
     }
+    
     
     
     /* ========== viewWillAppear ========== */
@@ -164,116 +175,33 @@ final class SearchViewController: BaseViewController {
         super.viewWillAppear(animated)
         
         tabBarController?.delegate = self
-        
-        // 좋아요 창에서 넘어올 때 셀 좋아요 여부를 업데이트 해주기 위해 필요함
         collectionView.reloadData()
     }
     
     
-    /* ===== 서버 통신 함수 ===== */
-//    private func callShopingList(_ query: String, _ sortType: SortCase, _ start: Int) {
-//
-//        // case 1 (pagination) : 기존 배열에 새로운 데이터 append
-//        // case 2 (reload) : 기존 배열 초기화 후 새로운 데이터 append
-//
-//        if (query == "") {
-//            // 검색 x
-//        } else {
-//            ShoppingAPIManager.shared.callShoppingList(query, sortType, start) { value in
-//
-//                // case 2
-//                if (self.startNum == 1) {
-//                    self.collectionView.setContentOffset(.zero, animated: true) // 스크롤 시점 맨 위로 올림
-//                    self.data.removeAll()   // 배열 초기화
-//                }
-//
-//                self.totalNum = value.total
-//                print(self.totalNum)
-//                self.data.append(contentsOf: value.items)   // 새로운 데이터 append
-//
-//                self.collectionView.reloadData()
-//            } showAlertWhenNetworkDisconnected: {
-//                self.showAlert("네트워크 연결이 끊겼습니다", "목록을 불러올 수 없습니다")
-//            }
-//        }
-//    }
-    
-    /* ===== 데이터 초기화 함수= ===== */
-//    private func initData() {
-//        startNum = 1
-//    }
-    
-    
     /* ===== 현재 서치바 텍스트 기반으로 검색 후 테이블 업데이트 ===== */
     // (1). return 키    (2). 정렬 버튼 4개
+    // searchNewData -> initData -> + callShoppingList
     private func searchNewData() {
         viewModel.initData()
-        
-//        viewModel.callShopingList {
-//            self.collectionView.setContentOffset(.zero, animated: true)
-//        } showAlert: {
-//            self.showAlert("네트워크 연결이 끊겼습니다", "목록을 불러올 수 없습니다")
-//        }
-
-        
-//        initData()
-//
-//        callShopingList(searchingWord, howSort, startNum)
     }
     
     
     /* ===== 버튼 addTarget 액션 ===== */
     @objc
-    private func accuracySortButtonClicked() {
+    private func sortButtonClicked(_ button: UIButton) {
+        
+        guard let whatSort = button.whatSort else { return }
+        
         searchController.searchBar.resignFirstResponder()   // 키보드 내림
-        
         if NetworkMonitor.shared.isConnected {
-            viewModel.howSort.value = .accuracy         // 현재 정렬 상태 변경
+            viewModel.howSort.value = whatSort
             searchNewData()             // 검색 진행
-//            changeSortButtonDesign()    // 버튼 디자인 변경
         } else {
             showAlert("네트워크 연결이 끊겼습니다", "해당 기능을 사용할 수 없습니다")
         }
     }
-    @objc
-    private func dateSortButtonClicked() {
-        searchController.searchBar.resignFirstResponder()
-        
-        if NetworkMonitor.shared.isConnected {
-            viewModel.howSort.value = .date
-            searchNewData()
-//            changeSortButtonDesign()
-        } else {
-            showAlert("네트워크 연결이 끊겼습니다", "해당 기능을 사용할 수 없습니다")
-        }
-    }
-    @objc
-    private func highPriceSortButtonClicked() {
-        searchController.searchBar.resignFirstResponder()
-        
-        if NetworkMonitor.shared.isConnected {
-            viewModel.howSort.value = .highPrice
-            searchNewData()
-//            changeSortButtonDesign()
-        } else {
-            showAlert("네트워크 연결이 끊겼습니다", "해당 기능을 사용할 수 없습니다")
-        }
-    }
-    @objc
-    private func lowPriceSortButtonClicked() {
-        searchController.searchBar.resignFirstResponder()
-        
-        if NetworkMonitor.shared.isConnected {
-            viewModel.howSort.value = .lowPrice
-            searchNewData()
-//            changeSortButtonDesign()
-        } else {
-            showAlert("네트워크 연결이 끊겼습니다", "해당 기능을 사용할 수 없습니다")
-        }
-    }
-    
-    
-    
+     
     /* ===== set Configure / Constraints ===== */
     override func setConfigure() {
         super.setConfigure()
