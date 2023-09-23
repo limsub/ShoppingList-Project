@@ -384,16 +384,6 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
                 task.imageData = data
                 vc.newProduct?.imageData = data // 실질적으로 사용하는 데이터는 newProduct이기 때문에 예외적으로 이미지 데이터만 직접 전달한다
             }
-            
-            // 데이터 추가가 완료된 이후, 화면 전환
-            // 화면 전환
-//            DispatchQueue.main.async {
-//                let vc = WebViewController()
-//                vc.previousVC = self
-//                vc.product = task
-//                vc.likeOrNot = heart
-//                self.navigationController?.pushViewController(vc, animated: true)
-//            }
         }
     }
 }
@@ -407,19 +397,11 @@ extension SearchViewController: UICollectionViewDataSourcePrefetching {
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
         
         for indexPath in indexPaths {
-            // (1). indexPath.row가 현재 로드한 거의 모든 데이터까지 왔을 때
-            // (2). startNum 쿼리는 최대 100까지만 가능하기 때문에 maximum 91
-            // (3). (거의 무조건이지만) 혹시 현재 인덱스가 검색 가능한 데이터의 총량보다 적을 때
             if viewModel.paginationInPrefetchPossible(indexPath) {
                 if (NetworkMonitor.shared.isConnected) {
-                    // startNum : 데이터 시작 위치. 30씩 올려준다
                     viewModel.plusData()
-//                    startNum += 30;
-                    // startNum에 바인드 -> callShoppingList
-//                    callShopingList(searchingWord, howSort, startNum)
                 } else {
                     viewModel.goEndScroll = true
-//                    goEndScroll = true  // 밑까지 왔는데, 네트워크 통신 끊긴 상황
                     showAlert("네트워크 연결이 끊겼습니다", "데이터를 불러올 수 없습니다")
                 }
             }
@@ -428,30 +410,16 @@ extension SearchViewController: UICollectionViewDataSourcePrefetching {
             }
         }
     }
-    
-    // 네트워크가 끊긴 상태에서 스크롤을 맨 밑까지 내리면
-    // indexPath는 끝까지 찍었기 때문에
-    // 네트워크가 다시 연결되어도 바로 pagination이 실행되지 않는다.
-    // 위로 살짝 올렸다가 내리면, 다시 prefetchItem이 실행되면서 pagination이 실행된다
-    
-    // 해결 방안 -> scroll height를 계산한다
 }
 
 extension SearchViewController: UIScrollViewDelegate {
 
-    // 조건
-    // 1. 거의 다 스크롤 한 상태인가
-    // 2. pagination이 가능한 상태인가 (startNum < 91)
-    // 3. 네트워크 연결이 되어있는가
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         if viewModel.paginationInScrollViewPossible(scrollView.contentSize, scrollView.contentOffset) {
             print("pagination (scroll) 실행")
             viewModel.plusData()
-//            startNum += 30
             viewModel.goEndScroll = false // 네트워크 통신 때문인지 contentSize.height 다시 커지는 시점이 이 함수가 다시 실행되는 것보다 늦어서, 얘가 연속해서 계속 실행될 수 있는 문제점
-            
-//            callShopingList(searchingWord, howSort, startNum)
         }
     }
 }

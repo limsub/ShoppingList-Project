@@ -10,9 +10,12 @@ import RealmSwift
 
 final class LikeViewController: BaseViewController {
     
+    /* ========== MVVM ========== */
+    let viewModel = LikeViewModel()
+    
     /* ========== repository pattern ========== */
-    let repository = LikesTableRepository()
-    var tasks: Results<LikesTable>?
+//    let repository = LikesTableRepository()
+//    var tasks: Results<LikesTable>?
     
     /* ========== 인스턴스 생성 ========== */
     let searchController = UISearchController(searchResultsController: nil)
@@ -65,14 +68,20 @@ final class LikeViewController: BaseViewController {
     /* ========== viewDidLoad ========== */
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // 데이터 불러오기
-        tasks = repository.fetch()
-        
-        
         view.backgroundColor = .systemBackground
         
-        /* === 네비게이션 아이템 및 서치바 커스텀 === */
+        customNavigation()
+        
+        viewModel.searchingText.bind { _ in
+            self.viewModel.updateTasks()
+        }
+        
+        // 데이터 불러오기
+        viewModel.fetchTasks()
+    }
+    /* ========== viewDidLoad에 들어갈 애들 ========== */
+    /* === 네비게이션 아이템 및 서치바 커스텀 === */
+    func customNavigation() {
         title = "좋아요 목록"
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
@@ -87,7 +96,6 @@ final class LikeViewController: BaseViewController {
         navigationController?.navigationBar.backgroundColor = .systemBackground
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.labelColor]
         navigationController?.navigationBar.tintColor = .labelColor
-    
     }
     
     /* ========== viewWillAppear ========== */
@@ -125,36 +133,30 @@ final class LikeViewController: BaseViewController {
 extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let tasks = tasks else { return 0 }
         
-        if (tasks.count == 0) {
-            noDataSearched.isHidden = false
-        } else {
-            noDataSearched.isHidden = true
-        }
-        return tasks.count
+        noDataSearched.isHidden = !viewModel.isTasksEmpty()
+        return viewModel.tasksCount()
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShoppingCollectionViewCell.description(), for: indexPath) as? ShoppingCollectionViewCell else { return UICollectionViewCell() }
         
-        guard let tasks = tasks else { return cell }
+        let item = viewModel.itemInTasks(indexPath)
         
         var searchWord = searchController.searchBar.text ?? ""
         
         if (checkAllSpace(searchWord)) { searchWord = "" }
         
-        cell.initialDesignCellForLikesTable(tasks[indexPath.row], searchWord)
+        cell.initialDesignCellForLikesTable(item, searchWord)
         
         
         // 좋아요 해제 기능
         cell.heartCallBackMethod = { [weak self] in
             print("좋아요 화면 : 좋아요가 해제됩니다")
             
-            let item = tasks[indexPath.row]
-            
-            self?.repository.deleteItem(item)
+            self?.viewModel.repository.deleteItem(item)
             self?.collectionView.reloadData()
         }
         
@@ -165,11 +167,11 @@ extension LikeViewController: UICollectionViewDelegate, UICollectionViewDataSour
         
         searchController.searchBar.resignFirstResponder()
         
-        let task = tasks?[indexPath.row]
+        let item = viewModel.itemInTasks(indexPath)
         
         let vc = WebViewController()
         vc.previousVC = self
-        vc.product = task
+        vc.product = item
         vc.likeOrNot = true
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -183,7 +185,7 @@ extension LikeViewController: UISearchBarDelegate {
     private func searchNewData() {
         guard let txt = searchController.searchBar.text else { return }
         
-        tasks = (txt.count == 0) ? repository.fetch() : repository.search(txt)
+        viewModel.searchingText.value = txt
         
         collectionView.reloadData()
     }

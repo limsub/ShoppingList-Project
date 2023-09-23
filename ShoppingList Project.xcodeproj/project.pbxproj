@@ -10,6 +10,7 @@
 		4828D21C2ABD5C48003FD868 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4828D21B2ABD5C48003FD868 /* SearchViewModel.swift */; };
 		4828D21F2ABE6395003FD868 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4828D21E2ABE6395003FD868 /* Observable.swift */; };
 		4828D2212ABE761C003FD868 /* UIButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4828D2202ABE761C003FD868 /* UIButton.swift */; };
+		4828D2232ABE7C65003FD868 /* LikeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4828D2222ABE7C65003FD868 /* LikeViewModel.swift */; };
 		489C466C2AAAE8ED00FF2E29 /* RealmModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C466B2AAAE8ED00FF2E29 /* RealmModel.swift */; };
 		489C466E2AAAEB7400FF2E29 /* LikesTableRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C466D2AAAEB7400FF2E29 /* LikesTableRepository.swift */; };
 		489C46712AAB276800FF2E29 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C46702AAB276800FF2E29 /* WebViewController.swift */; };
@@ -45,6 +46,7 @@
 		4828D21B2ABD5C48003FD868 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		4828D21E2ABE6395003FD868 /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		4828D2202ABE761C003FD868 /* UIButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIButton.swift; sourceTree = "<group>"; };
+		4828D2222ABE7C65003FD868 /* LikeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeViewModel.swift; sourceTree = "<group>"; };
 		489C466B2AAAE8ED00FF2E29 /* RealmModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmModel.swift; sourceTree = "<group>"; };
 		489C466D2AAAEB7400FF2E29 /* LikesTableRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesTableRepository.swift; sourceTree = "<group>"; };
 		489C46702AAB276800FF2E29 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 			isa = PBXGroup;
 			children = (
 				489CAB042AA9A937001A4408 /* LikeViewController.swift */,
+				4828D2222ABE7C65003FD868 /* LikeViewModel.swift */,
 			);
 			path = Like;
 			sourceTree = "<group>";
@@ -344,6 +347,7 @@
 				489CAB1E2AA9B003001A4408 /* ShoppingCollectionViewCell.swift in Sources */,
 				489C466C2AAAE8ED00FF2E29 /* RealmModel.swift in Sources */,
 				489CAB2B2AA9C394001A4408 /* APIKey.swift in Sources */,
+				4828D2232ABE7C65003FD868 /* LikeViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
