@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4828D21C2ABD5C48003FD868 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4828D21B2ABD5C48003FD868 /* SearchViewModel.swift */; };
+		4828D21F2ABE6395003FD868 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4828D21E2ABE6395003FD868 /* Observable.swift */; };
 		489C466C2AAAE8ED00FF2E29 /* RealmModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C466B2AAAE8ED00FF2E29 /* RealmModel.swift */; };
 		489C466E2AAAEB7400FF2E29 /* LikesTableRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C466D2AAAEB7400FF2E29 /* LikesTableRepository.swift */; };
 		489C46712AAB276800FF2E29 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 489C46702AAB276800FF2E29 /* WebViewController.swift */; };
@@ -39,6 +41,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4828D21B2ABD5C48003FD868 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		4828D21E2ABE6395003FD868 /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		489C466B2AAAE8ED00FF2E29 /* RealmModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealmModel.swift; sourceTree = "<group>"; };
 		489C466D2AAAEB7400FF2E29 /* LikesTableRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikesTableRepository.swift; sourceTree = "<group>"; };
 		489C46702AAB276800FF2E29 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
@@ -83,6 +87,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4828D21D2ABE6388003FD868 /* Observable */ = {
+			isa = PBXGroup;
+			children = (
+				4828D21E2ABE6395003FD868 /* Observable.swift */,
+			);
+			path = Observable;
+			sourceTree = "<group>";
+		};
 		489C466A2AAAE8E100FF2E29 /* Realm */ = {
 			isa = PBXGroup;
 			children = (
@@ -129,6 +141,7 @@
 		489CAAE62AA9A6F3001A4408 /* ShoppingList Project */ = {
 			isa = PBXGroup;
 			children = (
+				4828D21D2ABE6388003FD868 /* Observable */,
 				489C467D2AAC11A800FF2E29 /* Extension */,
 				489C466A2AAAE8E100FF2E29 /* Realm */,
 				489CAB312AA9DC43001A4408 /* Enum */,
@@ -169,6 +182,7 @@
 			isa = PBXGroup;
 			children = (
 				489CAB022AA9A92D001A4408 /* SearchViewController.swift */,
+				4828D21B2ABD5C48003FD868 /* SearchViewModel.swift */,
 			);
 			path = Search;
 			sourceTree = "<group>";
@@ -304,6 +318,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4828D21F2ABE6395003FD868 /* Observable.swift in Sources */,
 				489CAB2D2AA9C3D0001A4408 /* ShoppingAPIManager.swift in Sources */,
 				489C46712AAB276800FF2E29 /* WebViewController.swift in Sources */,
 				489CAB332AA9DC51001A4408 /* SortEnum.swift in Sources */,
@@ -319,6 +334,7 @@
 				489CAAEA2AA9A6F3001A4408 /* SceneDelegate.swift in Sources */,
 				489C46812AAC511200FF2E29 /* NetworkMonitor.swift in Sources */,
 				489CAB202AA9B680001A4408 /* ReusableProtocol.swift in Sources */,
+				4828D21C2ABD5C48003FD868 /* SearchViewModel.swift in Sources */,
 				489CAB0A2AA9A94C001A4408 /* BaseViewController.swift in Sources */,
 				489CAB052AA9A937001A4408 /* LikeViewController.swift in Sources */,
 				489CAB1E2AA9B003001A4408 /* ShoppingCollectionViewCell.swift in Sources */,

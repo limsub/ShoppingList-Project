@@ -8,14 +8,18 @@
 import UIKit
 
 final class SearchViewController: BaseViewController {
+    
+    /* ===== MVVM 적용 ===== */
+    let viewModel = SearchViewModel()
+    
 
     /* ========== 컬렉션뷰 데이터 ========== */
-    var data: [Item] = []
-    var startNum: Int = 1   // pagination (1 -> 31 -> 61 -> 91 -> done)
-    var totalNum: Int = 0   // pagination 시 예외처리용
-    var goEndScroll = false // pagination 예외처리용
-    var howSort = SortCase.accuracy    // 정렬 기준. 디폴트 : 정확도
-    var searchingWord: String = ""          // 현재 로드된 데이터들의 검색 단어 -> 검색 시에만 업데이트.
+//    var data: [Item] = []
+//    var startNum: Int = 1   // pagination (1 -> 31 -> 61 -> 91 -> done)
+//    var totalNum: Int = 0   // pagination 시 예외처리용
+//    var goEndScroll = false // pagination 예외처리용
+//    var howSort = SortCase.accuracy    // 정렬 기준. 디폴트 : 정확도
+//    var searchingWord: String = ""          // 현재 로드된 데이터들의 검색 단어 -> 검색 시에만 업데이트.
     
     
     /* ========== repository pattern ========== */
@@ -91,10 +95,10 @@ final class SearchViewController: BaseViewController {
     
     
     /* === 정렬 타입에 따라 버튼 디자인 변경 === */
-    private func changeSortButtonDesign() {
+    private func changeSortButtonDesign(_ type: SortCase) {
         let buttons = [accuracySortButton, dateSortButton, highPriceSortButton, lowPriceSortButton]
         for (index, button) in buttons.enumerated() {
-            if let title = button.titleLabel?.text, title == howSort.title {
+            if let title = button.titleLabel?.text, title == type.title {
                 buttons[index].backgroundColor = .labelColor
                 buttons[index].setTitleColor(.systemBackground, for: .normal)
             } else {
@@ -102,7 +106,6 @@ final class SearchViewController: BaseViewController {
                 buttons[index].setTitleColor(.systemGray, for: .normal)
             }
         }
-        
     }
     
     
@@ -110,6 +113,21 @@ final class SearchViewController: BaseViewController {
     /* ========== viewDidLoad ========== */
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        /* ===== MVVM 적용 ===== */
+        viewModel.data.bind { _ in
+            self.collectionView.reloadData()
+        }
+        viewModel.startNum.bind { _ in
+            self.viewModel.callShopingList {
+                self.collectionView.setContentOffset(.zero, animated: true)
+            } showAlert: {
+                self.showAlert("네트워크 연결이 끊겼습니다", "목록을 불러올 수 없습니다")
+            }
+        }
+        viewModel.howSort.bind { value in
+            self.changeSortButtonDesign(value)
+        }
         
         view.backgroundColor = .systemBackground
         
@@ -137,8 +155,9 @@ final class SearchViewController: BaseViewController {
         highPriceSortButton.addTarget(self, action: #selector(highPriceSortButtonClicked), for: .touchUpInside)
         lowPriceSortButton.addTarget(self, action: #selector(lowPriceSortButtonClicked), for: .touchUpInside)
         
-        changeSortButtonDesign()
+        changeSortButtonDesign(viewModel.howSort.value)
     }
+    
     
     /* ========== viewWillAppear ========== */
     override func viewWillAppear(_ animated: Bool) {
@@ -152,47 +171,54 @@ final class SearchViewController: BaseViewController {
     
     
     /* ===== 서버 통신 함수 ===== */
-    private func callShopingList(_ query: String, _ sortType: SortCase, _ start: Int) {
-        
-        // case 1 (pagination) : 기존 배열에 새로운 데이터 append
-        // case 2 (reload) : 기존 배열 초기화 후 새로운 데이터 append
-        
-        if (query == "") {
-            // 검색 x
-        } else {
-            ShoppingAPIManager.shared.callShoppingList(query, sortType, start) { value in
-                
-                // case 2
-                if (self.startNum == 1) {
-                    self.collectionView.setContentOffset(.zero, animated: true) // 스크롤 시점 맨 위로 올림
-                    self.data.removeAll()   // 배열 초기화
-                }
-                
-                self.totalNum = value.total
-                print(self.totalNum)
-                self.data.append(contentsOf: value.items)   // 새로운 데이터 append
-                
-                self.collectionView.reloadData()
-            } showAlertWhenNetworkDisconnected: {
-                self.showAlert("네트워크 연결이 끊겼습니다", "목록을 불러올 수 없습니다")
-            }
-        }
-    }
+//    private func callShopingList(_ query: String, _ sortType: SortCase, _ start: Int) {
+//
+//        // case 1 (pagination) : 기존 배열에 새로운 데이터 append
+//        // case 2 (reload) : 기존 배열 초기화 후 새로운 데이터 append
+//
+//        if (query == "") {
+//            // 검색 x
+//        } else {
+//            ShoppingAPIManager.shared.callShoppingList(query, sortType, start) { value in
+//
+//                // case 2
+//                if (self.startNum == 1) {
+//                    self.collectionView.setContentOffset(.zero, animated: true) // 스크롤 시점 맨 위로 올림
+//                    self.data.removeAll()   // 배열 초기화
+//                }
+//
+//                self.totalNum = value.total
+//                print(self.totalNum)
+//                self.data.append(contentsOf: value.items)   // 새로운 데이터 append
+//
+//                self.collectionView.reloadData()
+//            } showAlertWhenNetworkDisconnected: {
+//                self.showAlert("네트워크 연결이 끊겼습니다", "목록을 불러올 수 없습니다")
+//            }
+//        }
+//    }
     
     /* ===== 데이터 초기화 함수= ===== */
-    private func initData() {
-        startNum = 1
-    }
+//    private func initData() {
+//        startNum = 1
+//    }
     
     
     /* ===== 현재 서치바 텍스트 기반으로 검색 후 테이블 업데이트 ===== */
     // (1). return 키    (2). 정렬 버튼 4개
     private func searchNewData() {
-        initData()
+        viewModel.initData()
         
-        let query = searchingWord
+//        viewModel.callShopingList {
+//            self.collectionView.setContentOffset(.zero, animated: true)
+//        } showAlert: {
+//            self.showAlert("네트워크 연결이 끊겼습니다", "목록을 불러올 수 없습니다")
+//        }
+
         
-        callShopingList(query, howSort, startNum)
+//        initData()
+//
+//        callShopingList(searchingWord, howSort, startNum)
     }
     
     
@@ -202,9 +228,9 @@ final class SearchViewController: BaseViewController {
         searchController.searchBar.resignFirstResponder()   // 키보드 내림
         
         if NetworkMonitor.shared.isConnected {
-            howSort = .accuracy         // 현재 정렬 상태 변경
+            viewModel.howSort.value = .accuracy         // 현재 정렬 상태 변경
             searchNewData()             // 검색 진행
-            changeSortButtonDesign()    // 버튼 디자인 변경
+//            changeSortButtonDesign()    // 버튼 디자인 변경
         } else {
             showAlert("네트워크 연결이 끊겼습니다", "해당 기능을 사용할 수 없습니다")
         }
@@ -214,9 +240,9 @@ final class SearchViewController: BaseViewController {
         searchController.searchBar.resignFirstResponder()
         
         if NetworkMonitor.shared.isConnected {
-            howSort = .date
+            viewModel.howSort.value = .date
             searchNewData()
-            changeSortButtonDesign()
+//            changeSortButtonDesign()
         } else {
             showAlert("네트워크 연결이 끊겼습니다", "해당 기능을 사용할 수 없습니다")
         }
@@ -226,9 +252,9 @@ final class SearchViewController: BaseViewController {
         searchController.searchBar.resignFirstResponder()
         
         if NetworkMonitor.shared.isConnected {
-            howSort = .highPrice
+            viewModel.howSort.value = .highPrice
             searchNewData()
-            changeSortButtonDesign()
+//            changeSortButtonDesign()
         } else {
             showAlert("네트워크 연결이 끊겼습니다", "해당 기능을 사용할 수 없습니다")
         }
@@ -238,9 +264,9 @@ final class SearchViewController: BaseViewController {
         searchController.searchBar.resignFirstResponder()
         
         if NetworkMonitor.shared.isConnected {
-            howSort = .lowPrice
+            viewModel.howSort.value = .lowPrice
             searchNewData()
-            changeSortButtonDesign()
+//            changeSortButtonDesign()
         } else {
             showAlert("네트워크 연결이 끊겼습니다", "해당 기능을 사용할 수 없습니다")
         }
@@ -296,25 +322,34 @@ final class SearchViewController: BaseViewController {
 extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if (data.count == 0) {
-            noDataSearched.isHidden = false
-        } else {
-            noDataSearched.isHidden = true
-        }
         
-        return data.count
+        noDataSearched.isHidden = !viewModel.isDataEmpty()
+        
+        return viewModel.dataCount()
+        
+//        if (data.count == 0) {
+//            noDataSearched.isHidden = false
+//        } else {
+//            noDataSearched.isHidden = true
+//        }
+        
+//        return data.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShoppingCollectionViewCell.description(), for: indexPath) as? ShoppingCollectionViewCell else { return UICollectionViewCell() }
+        
+        let item = viewModel.item(indexPath)
 
         // 기본 디자인
-        cell.initialDesignCell(data[indexPath.row], searchingWord)
+        cell.initialDesignCell(item, viewModel.searchingWord)
+//        cell.initialDesignCell(data[indexPath.row], searchingWord)
         
         // 좋아요 버튼 디자인
         var heart = false
-        if !(repository.fetch(data[indexPath.row].productID).isEmpty) {
+        //        if !(repository.fetch(data[indexPath.row].productID).isEmpty) {
+        if !(repository.fetch(item.productID).isEmpty) {
             heart = true
         }
         cell.checkHeartButton(heart)
@@ -323,7 +358,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         /* == 좋아요 버튼 콜백함수 정의 === */
         cell.heartCallBackMethod = { [weak self] in // weak 키워드 사용 -> self가 nil일 가능성
             
-            let item = self?.data[indexPath.row]
+//            let item = self?.data[indexPath.row]
 
             // 1. 현재 좋아요 목록에 있는지 확인
             // heart
@@ -339,7 +374,7 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
                     // (1). 좋아요 리스트에서 검색
                     // (2). 검색 결과 delete
                     // (3). collectionView reload
-                if let item, let task = self?.repository.fetch(item.productID).first {
+                if let task = self?.repository.fetch(item.productID).first {
                     self?.repository.deleteItem(task)
                     self?.collectionView.reloadData()
                 }
@@ -359,37 +394,38 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
                     // (2). 이미지 따로 추가 (imageLink -> 데이터 변환)
                     // (3). new task create
                     // (4). collectionView reload
-                if let item {
+                
                     
-                    // 주의!! 애초에 데이터를 저장할 때 <b> 태그를 빼고 저장해야 한다!!!
-                    var title = item.title
-                    title = title.replacingOccurrences(of: "<b>", with: "")
-                    title = title.replacingOccurrences(of: "</b>", with: "")
-                    
-                    let task = LikesTable(productId: item.productID, mallName: item.mallName, title: title, lprice: item.lprice, imageLink: item.image)
-                    
-                    let url = URL(string: item.image)
-                    DispatchQueue.global().async {  // try Data : 동기
-                        if let url, let data = try? Data(contentsOf: url) {
-                            task.imageData = data
-                        }
-                        DispatchQueue.main.async {  // realm, UI : main
-                            self?.repository.createItem(task)
-                            self?.collectionView.reloadData()
-                        }
+                // 주의!! 애초에 데이터를 저장할 때 <b> 태그를 빼고 저장해야 한다!!!
+                var title = item.title
+                title = title.replacingOccurrences(of: "<b>", with: "")
+                title = title.replacingOccurrences(of: "</b>", with: "")
+                
+                let task = LikesTable(productId: item.productID, mallName: item.mallName, title: title, lprice: item.lprice, imageLink: item.image)
+                
+                let url = URL(string: item.image)
+                DispatchQueue.global().async {  // try Data : 동기
+                    if let url, let data = try? Data(contentsOf: url) {
+                        task.imageData = data
+                    }
+                    DispatchQueue.main.async {  // realm, UI : main
+                        self?.repository.createItem(task)
+                        self?.collectionView.reloadData()
                     }
                 }
+                
             }
         }
         
-        return cell;
+        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
         searchController.searchBar.resignFirstResponder()
         
-        let item = data[indexPath.row]
+        let item = viewModel.item(indexPath)
+//        let item = data[indexPath.row]
         
         // 값 전달 : LikesTable 타입(각종 정보)과 Bool 타입(좋아요 여부)로 넘겨줌
         
@@ -446,18 +482,20 @@ extension SearchViewController: UICollectionViewDataSourcePrefetching {
             // (1). indexPath.row가 현재 로드한 거의 모든 데이터까지 왔을 때
             // (2). startNum 쿼리는 최대 100까지만 가능하기 때문에 maximum 91
             // (3). (거의 무조건이지만) 혹시 현재 인덱스가 검색 가능한 데이터의 총량보다 적을 때
-            if (indexPath.row == data.count - 1) && (startNum < 991) && (indexPath.row < totalNum ) && (startNum < totalNum - 30) {
+            if viewModel.paginationInPrefetchPossible(indexPath) {
                 if (NetworkMonitor.shared.isConnected) {
                     // startNum : 데이터 시작 위치. 30씩 올려준다
-                    startNum += 30;
-                    // 데이터를 초기화하는 부분이 아니기 때문에 searchNewData 실행하지 않는다
-                    callShopingList(searchingWord, howSort, startNum)
+                    viewModel.plusData()
+//                    startNum += 30;
+                    // startNum에 바인드 -> callShoppingList
+//                    callShopingList(searchingWord, howSort, startNum)
                 } else {
-                    goEndScroll = true  // 밑까지 왔는데, 네트워크 통신 끊긴 상황
+                    viewModel.goEndScroll = true
+//                    goEndScroll = true  // 밑까지 왔는데, 네트워크 통신 끊긴 상황
                     showAlert("네트워크 연결이 끊겼습니다", "데이터를 불러올 수 없습니다")
                 }
             }
-            else if (indexPath.row == data.count - 1) && (startNum >= 991) {
+            else if viewModel.isEndPagination(indexPath) {
                  showAlert("모든 데이터를 불렀습니다", "더 이상 불러올 수 없습니다")
             }
         }
@@ -478,14 +516,14 @@ extension SearchViewController: UIScrollViewDelegate {
     // 2. pagination이 가능한 상태인가 (startNum < 91)
     // 3. 네트워크 연결이 되어있는가
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print(scrollView.contentSize.height, scrollView.contentOffset.y, startNum)
-        if ( scrollView.contentSize.height - scrollView.contentOffset.y < 700  && startNum < 991 && NetworkMonitor.shared.isConnected && goEndScroll) && (startNum < totalNum - 30) {
+        
+        if viewModel.paginationInScrollViewPossible(scrollView.contentSize, scrollView.contentOffset) {
             print("pagination (scroll) 실행")
-            startNum += 30
-            goEndScroll = false // 네트워크 통신 때문인지 contentSize.height 다시 커지는 시점이 이 함수가 다시 실행되는 것보다 늦어서, 얘가 연속해서 계속 실행될 수 있는 문제점
+            viewModel.plusData()
+//            startNum += 30
+            viewModel.goEndScroll = false // 네트워크 통신 때문인지 contentSize.height 다시 커지는 시점이 이 함수가 다시 실행되는 것보다 늦어서, 얘가 연속해서 계속 실행될 수 있는 문제점
             
-            callShopingList(searchingWord, howSort, startNum)
-            
+//            callShopingList(searchingWord, howSort, startNum)
         }
     }
 }
@@ -511,7 +549,7 @@ extension SearchViewController: UISearchBarDelegate {
             return
         }
         
-        searchingWord = currentSearcing
+        viewModel.searchingWord = currentSearcing
         searchNewData()
     }
 }
