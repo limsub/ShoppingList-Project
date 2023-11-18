@@ -1,5 +1,13 @@
 # ShoppingList-Project
 
+
+<p align="center">
+    <img src="https://github.com/limsub/ShoppingList-Project/assets/99518799/9e73dd89-edbe-49cf-88a1-5d76d95ac07c" align="center" width="32%">
+    <img src="https://github.com/limsub/ShoppingList-Project/assets/99518799/cf269938-4c20-4109-9a6f-43ddeaa5c857" align="center" width="32%">
+    <img src="https://github.com/limsub/ShoppingList-Project/assets/99518799/1fff9ce5-2877-47a0-9541-126d460fb6fb" align="center" width="32%">
+</p>
+
+
 # 1. 요구사항 구현
 - 네이버 쇼핑 API 활용 상품 검색
 - 좋아요 기능 구현 (검색 화면, 좋아요 목록 화면, 상세 화면 동기화)
